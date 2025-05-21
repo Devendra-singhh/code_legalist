@@ -1,8 +1,34 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Code Legalist Homepage
+
+This is the homepage for the Code Legalist platform, built with [Next.js](https://nextjs.org).
 
 ## Getting Started
 
-First, run the development server:
+First, install the dependencies:
+
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+# or
+bun install
+```
+
+### Environment Variables
+
+Create a `.env.local` file in the root directory and add the following environment variables:
+
+```bash
+# Forum Frontend URL
+NEXT_PUBLIC_FORUM_URL=https://forumfrontend-kzyqs2twi-rxhulshxrmxs-projects.vercel.app
+
+# Backend API URL
+NEXT_PUBLIC_API_URL=https://forumbackend-e759zx3lh-rxhulshxrmxs-projects.vercel.app
+```
+
+### Running the Development Server
 
 ```bash
 npm run dev
@@ -16,9 +42,23 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `app/page.tsx` - The main page component
+- `app/find-lawyer/page.tsx` - Find a lawyer page
+- `app/login/page.tsx` - Login page
+- `app/signup/page.tsx` - Signup page
+- `components/` - Reusable React components
+- `public/` - Static files
+- `styles/` - Global styles
+
+## Features
+
+- Responsive design
+- Dark mode support
+- Integration with the Code Legalist forum
+- Legal AI chatbot integration
+- Find a lawyer functionality
 
 ## Learn More
 

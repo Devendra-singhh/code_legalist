@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/next"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/"
+    }
+  ],
+  "env": {
+    "NEXT_PUBLIC_FORUM_URL": "https://forumfrontend-kzyqs2twi-rxhulshxrmxs-projects.vercel.app",
+    "NEXT_PUBLIC_API_URL": "https://forumbackend-e759zx3lh-rxhulshxrmxs-projects.vercel.app"
+  },
+  "buildCommand": "next build",
+  "outputDirectory": ".next"
+}

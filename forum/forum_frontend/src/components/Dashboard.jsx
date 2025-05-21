@@ -22,7 +22,7 @@ import toast, { Toaster } from "react-hot-toast";
 import news from "../assets/news.jpg";
 import Rights from "./Rights"
 
-const API_BASE_URL = "https://code-legalist-backend.vercel.app";
+import { API_BASE_URL, HOMEPAGE_URL } from "../config";
 
 // Mock categories for demonstration
 const CATEGORIES = [
@@ -219,7 +219,7 @@ const Dashboard = ({ token, setIsAuthenticated, view = "all" }) => {
           <div className="relative z-10 w-full px-4 py-4">
             <div className="flex justify-between items-center">
               <div className="flex items-center space-x-6">
-                <a href="http://localhost:3000" className="relative group text-3xl font-bold text-white hover:text-indigo-300 transition-colors duration-300">
+                <a href="https://homepage-agurhz0qg-rxhulshxrmxs-projects.vercel.app" className="relative group text-3xl font-bold text-white hover:text-indigo-300 transition-colors duration-300">
                   <span className="absolute -inset-2 bg-gradient-to-r from-indigo-200/40 to-indigo-400/40 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
                   <span className="relative">Code Legalist</span>
                 </a>

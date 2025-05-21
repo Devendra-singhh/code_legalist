@@ -5,7 +5,7 @@ import { toast as toastify } from 'react-toastify';
 import { toast as hotToast } from 'react-hot-toast';
 import 'react-toastify/dist/ReactToastify.css';
 
-const API_BASE_URL = "https://code-legalist-backend.vercel.app";
+import { API_BASE_URL } from "../config";
 
 // Categories for post creation
 const CATEGORIES = [

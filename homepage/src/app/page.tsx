@@ -166,6 +166,14 @@ export default function Home() {
             >
               Find a Lawyer
             </Link>
+            <a
+              href="https://forumfrontend-kzyqs2twi-rxhulshxrmxs-projects.vercel.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-indigo-200 hover:border-b transition duration-300"
+            >
+              Forum
+            </a>
             <Link
               href="/login"
               className="hover:text-indigo-200 hover:border-b transition duration-300"
@@ -176,7 +184,7 @@ export default function Home() {
           
           <div className="md:flex space-x-4 ml-6 items-center">
             {isLoggedIn && (
-              <a href="http://localhost:5173/create-post" target="_blank" rel="noopener noreferrer">
+              <a href={`${process.env.NEXT_PUBLIC_FORUM_URL || 'https://forumfrontend-kzyqs2twi-rxhulshxrmxs-projects.vercel.app'}/create-post`} target="_blank" rel="noopener noreferrer">
                 <button className="px-4 py-2 border border-white/20 text-white rounded-lg hover:bg-white/10 transition duration-300">
                   Create Post
                 </button>
@@ -198,6 +206,14 @@ export default function Home() {
               >
                 Find a Lawyer
               </Link>
+              <a
+                href="https://forumfrontend-kzyqs2twi-rxhulshxrmxs-projects.vercel.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-indigo-200"
+              >
+                Forum
+              </a>
               <Link
                 href="/login"
                 className="px-4 py-2 bg-white/20 text-white rounded-lg hover:bg-white/30
@@ -206,7 +222,7 @@ export default function Home() {
                 Login
               </Link>
               {isLoggedIn && (
-                <a href="http://localhost:5173/create-post" target="_blank" rel="noopener noreferrer">
+                <a href={`${process.env.NEXT_PUBLIC_FORUM_URL || 'https://forumfrontend-kzyqs2twi-rxhulshxrmxs-projects.vercel.app'}/create-post`} target="_blank" rel="noopener noreferrer">
                   <button className="px-4 py-2 border border-white/20 text-white rounded-lg hover:bg-white/10 transition duration-300">
                     Create Post
                   </button>
@@ -246,7 +262,7 @@ export default function Home() {
                 <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-6 h-6 bg-white rotate-45 group-hover:bg-indigo-50 transition-colors duration-300"></div>
               </Link>
               <Link
-                href="http://localhost:5173"
+                href={process.env.NEXT_PUBLIC_FORUM_URL || 'https://forumfrontend-kzyqs2twi-rxhulshxrmxs-projects.vercel.app'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group px-8 py-4 bg-indigo-900/40 hover:bg-indigo-900/60 text-white rounded-xl

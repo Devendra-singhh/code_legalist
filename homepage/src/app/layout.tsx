@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Chat Legalist - Smart Legal Companion",
+  title: "Code Legalist - Smart Legal Companion",
   description: "Your AI-powered legal companion for asking questions, learning about law, and taking action.",
 };
 
@@ -16,7 +16,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={`${inter.className} antialiased`}>
+        <main className="min-h-screen bg-white">
+          {children}
+        </main>
+      </body>
     </html>
   );
 }

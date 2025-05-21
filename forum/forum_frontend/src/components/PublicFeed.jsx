@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FiChevronLeft, FiChevronRight, FiSearch, FiX, FiMessageSquare, FiHeart, FiShare2, FiSun, FiMoon } from "react-icons/fi";
+import { FiChevronLeft, FiChevronRight, FiSearch, FiX, FiMessageSquare, FiHeart, FiShare2 } from "react-icons/fi";
 import img from "../assets/img.png";
 import axios from "axios";
 import { format } from "date-fns";
@@ -25,7 +25,6 @@ const PublicFeed = () => {
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [darkMode, setDarkMode] = useState(false);
 
   const POSTS_PER_PAGE = 6;
 
@@ -63,23 +62,6 @@ const PublicFeed = () => {
   useEffect(() => {
     fetchPosts();
   }, []);
-
-  // Effect to initialize dark mode from localStorage
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    setDarkMode(savedTheme === 'dark');
-  }, []);
-
-  // Effect to apply dark mode class and save to localStorage
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  }, [darkMode]);
 
   const handleSearch = () => {
     if (!searchQuery.trim()) {
@@ -137,108 +119,105 @@ const PublicFeed = () => {
   };
 
   return (
-    <div className="min-h-screen font-sans bg-white text-gray-900">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
-        <div className="w-full px-4 py-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-6">
-              <a href="http://localhost:3000" className="text-2xl font-bold flex-1">Code Legalist</a>
-              <span className="text-gray-300">|</span>
-              <span className="text-lg text-gray-600">
-                Legal Forum
-              </span>
-            </div>
-
-            <div className="flex items-center space-x-4">
-              {/* Navigation Links */}
-              <Link
-                to="/"
-                className="px-4 py-2 text-gray-600 hover:text-indigo-600 transition-colors duration-300"
-              >
-                Forum Home
-              </Link>
-
-              {/* Search Bar */}
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search posts..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 w-64
-                    font-inter bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-500"
-                />
-                <FiSearch
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                  size={20}
-                />
-                {searchQuery && (
-                  <button
-                    onClick={() => {
-                      setSearchQuery("");
-                      setIsSearchActive(false);
-                      setFilteredPosts([]);
-                    }}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors duration-300"
-                  >
-                    <FiX size={20} />
-                  </button>
-                )}
+    <div className="min-h-screen font-sans bg-black">
+      {/* Combined Gradient Section */}
+      <div className="relative">
+        <div className="absolute inset-0 bg-gradient-to-br from-black via-indigo-900 to-indigo-800"></div>
+        
+        {/* Navbar */}
+        <div className="relative">
+          <div className="w-full px-4 py-4">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center space-x-6">
+                <a href="http://localhost:3000" className="relative group text-3xl font-bold text-white hover:text-indigo-300 transition-colors duration-300">
+                  <span className="absolute -inset-2 bg-gradient-to-r from-indigo-200/40 to-indigo-400/40 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
+                  <span className="relative">Code Legalist</span>
+                </a>
               </div>
 
-              {/* Dark Mode Toggle */}
-              <button
-                onClick={() => setDarkMode(!darkMode)}
-                className="p-2 rounded-full transition duration-300 flex items-center justify-center hover:bg-gray-100"
-                aria-label="Toggle dark mode"
-              >
-                {darkMode ? <FiSun size={20} className="text-gray-700" /> : <FiMoon size={20} className="text-gray-700" />}
-              </button>
+              <div className="flex items-center space-x-4">
+                {/* Navigation Links */}
+                <Link
+                  to="/"
+                  className="px-4 py-2 text-gray-200 hover:text-white transition-colors duration-300"
+                >
+                  Forum Home
+                </Link>
 
-              {/* Auth Buttons */}
-              <Link
-                to="/login"
-                className="px-4 py-2 text-gray-600 hover:text-indigo-600 transition-colors duration-300"
-              >
-                Login
-              </Link>
-              <Link
-                to="/signup"
-                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700
-                  transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-md"
-              >
-                Sign Up
-              </Link>
+                {/* Search Bar */}
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search posts..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 w-64
+                      font-inter bg-black/30 border-gray-300/30 text-white placeholder-gray-300"
+                  />
+                  <FiSearch
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-300"
+                    size={20}
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={() => {
+                        setSearchQuery("");
+                        setIsSearchActive(false);
+                        setFilteredPosts([]);
+                      }}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-300 hover:text-white transition-colors duration-300"
+                    >
+                      <FiX size={20} />
+                    </button>
+                  )}
+                </div>
+
+                {/* Auth Buttons */}
+                <Link
+                  to="/login"
+                  className="px-4 py-2 text-gray-200 hover:text-white transition-colors duration-300"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/signup"
+                  className="px-4 py-2 bg-white text-indigo-600 rounded-lg hover:bg-indigo-50
+                    transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-md"
+                >
+                  Sign Up
+                </Link>
+              </div>
             </div>
           </div>
         </div>
-      </header>
 
-      {/* Welcome Banner */}
-      <div className="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white py-12 px-4">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-4">Welcome to the Legal Forum</h2>
-          <p className="text-lg mb-6 text-indigo-50">
-            Join the conversation on the latest legal developments and insights
-          </p>
-          <Link
-            to="/signup"
-            className="inline-block px-6 py-3 bg-white text-indigo-600 rounded-lg hover:bg-indigo-50
-              transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-md"
-          >
-            Get Started
-          </Link>
+        {/* Welcome Content */}
+        <div className="relative text-white py-12 px-4">
+          <div className="max-w-7xl mx-auto text-center">
+            <h2 className="text-3xl font-bold mb-4">Welcome to the Legal Forum</h2>
+            <p className="text-lg mb-6 text-indigo-50">
+              Join the conversation on the latest legal developments and insights
+            </p>
+            <Link
+              to="/signup"
+              className="inline-block px-6 py-3 bg-white text-indigo-600 rounded-lg hover:bg-indigo-50
+                transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-md"
+            >
+              Get Started
+            </Link>
+          </div>
+          {/* Gradient Transition */}
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent"></div>
         </div>
       </div>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 py-8 bg-white">
+      <main className="max-w-7xl mx-auto px-4 py-8 bg-black">
         {/* Categories and Create Post */}
         <div className="mb-8 flex justify-between items-center">
           <div>
-            <h3 className="text-xl font-semibold mb-4 text-gray-900">Categories</h3>
+            <h3 className="text-xl font-semibold mb-4 text-white">Categories</h3>
             <div className="flex flex-wrap gap-3">
               {CATEGORIES.map((category) => (
                 <button
@@ -268,37 +247,30 @@ const PublicFeed = () => {
           {currentPosts.map((post) => (
             <div
               key={post._id}
-              className="bg-white border border-gray-200 rounded-lg shadow hover:shadow-lg transition-all duration-300"
+              className="bg-gray-950 border border-gray-800 rounded-lg shadow hover:shadow-lg transition-all duration-300"
             >
               <div className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center space-x-3">
-                    <img
-                      src={img}
-                      alt={post.username}
-                      className="w-10 h-10 rounded-full"
-                    />
-                    <div>
-                      <h4 className="font-semibold text-gray-900">{post.username}</h4>
-                      <p className="text-sm text-gray-500">{formatDate(post.createdAt)}</p>
-                    </div>
+                  <div>
+                    <h4 className="font-semibold text-white">{post.username}</h4>
+                    <p className="text-sm text-gray-400">{formatDate(post.createdAt)}</p>
                   </div>
                   <span className={`px-3 py-1 rounded-full text-sm ${post.category.color}`}>
                     {post.category.name}
                   </span>
                 </div>
-                <p className="text-gray-700 mb-4">{post.description}</p>
-                <div className="flex items-center justify-between text-gray-500">
+                <p className="text-gray-300 mb-4">{post.description}</p>
+                <div className="flex items-center justify-between text-gray-400">
                   <div className="flex items-center space-x-4">
-                    <button className="flex items-center space-x-1 hover:text-indigo-600">
+                    <button className="flex items-center space-x-1 hover:text-indigo-400">
                       <FiHeart size={18} />
                       <span>{post.likes}</span>
                     </button>
-                    <button className="flex items-center space-x-1 hover:text-indigo-600">
+                    <button className="flex items-center space-x-1 hover:text-indigo-400">
                       <FiMessageSquare size={18} />
                       <span>{post.comments}</span>
                     </button>
-                    <button className="flex items-center space-x-1 hover:text-indigo-600">
+                    <button className="flex items-center space-x-1 hover:text-indigo-400">
                       <FiShare2 size={18} />
                       <span>{post.shares}</span>
                     </button>
@@ -314,16 +286,16 @@ const PublicFeed = () => {
           <div className="flex justify-center items-center mt-8 space-x-4">
             <button
               onClick={handlePrevPage}
-              className="p-2 border border-gray-300 rounded-full hover:bg-indigo-600 hover:text-white transition-colors"
+              className="p-2 border border-gray-700 rounded-full hover:bg-indigo-600 hover:text-white transition-colors"
             >
               <FiChevronLeft size={16} />
             </button>
-            <span className="text-gray-600">
+            <span className="text-gray-400">
               Page {currentPage + 1} of {totalPages}
             </span>
             <button
               onClick={handleNextPage}
-              className="p-2 border border-gray-300 rounded-full hover:bg-indigo-600 hover:text-white transition-colors"
+              className="p-2 border border-gray-700 rounded-full hover:bg-indigo-600 hover:text-white transition-colors"
             >
               <FiChevronRight size={16} />
             </button>
@@ -332,9 +304,9 @@ const PublicFeed = () => {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-gray-200 py-6 mt-12">
+      <footer className="bg-black border-t border-gray-800 py-6 mt-12">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <p className="text-gray-600">&copy; 2025 Chat Legalist. All rights reserved.</p>
+          <p className="text-gray-400">&copy; 2025 Chat Legalist. All rights reserved.</p>
         </div>
       </footer>
     </div>

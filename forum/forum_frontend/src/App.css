@@ -1,0 +1,38 @@
+@keyframes border-travel {
+    0% {
+      clip-path: inset(100% 0 0 0);
+    }
+    25% {
+      clip-path: inset(0 100% 0 0);
+    }
+    50% {
+      clip-path: inset(0 0 100% 0);
+    }
+    75% {
+      clip-path: inset(0 0 0 100%);
+    }
+    100% {
+      clip-path: inset(100% 0 0 0);
+    }
+  }
+  
+  .traveling-border-box {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .traveling-border-box::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    border: 4px solid red;
+    border-radius: 0.75rem; /* Matches Tailwind's rounded-xl */
+    z-index: 1;
+    pointer-events: none;
+    animation: border-travel 5s linear infinite;
+    clip-path: inset(0 0 0 0);
+  }
+  

@@ -250,14 +250,14 @@ const Dashboard = ({ token, setIsAuthenticated, view = "all" }) => {
             <div className="flex items-center space-x-4">
               {/* Navigation Links */}
               <Link
-                to="http://localhost:3000"
-                className="px-4 py-2 text-gray-600 hover:text-red-500 transition-colors duration-300"
+                to="/"
+                className="px-4 py-2 text-gray-600 hover:text-indigo-600 transition-colors duration-300"
               >
                 Forum Home
               </Link>
               <Link
                 to="/dashboard/myposts"
-                className="px-4 py-2 text-gray-600 hover:text-red-500 transition-colors duration-300"
+                className="px-4 py-2 text-gray-600 hover:text-indigo-600 transition-colors duration-300"
               >
                 My Posts
               </Link>
@@ -270,7 +270,7 @@ const Dashboard = ({ token, setIsAuthenticated, view = "all" }) => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 w-64
+                  className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 w-64
                     font-inter bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-500"
                 />
                 <FiSearch
@@ -305,7 +305,7 @@ const Dashboard = ({ token, setIsAuthenticated, view = "all" }) => {
                 <span className="text-gray-600">{username}</span>
                 <button
                   onClick={handleLogout}
-                  className="px-4 py-2 text-gray-600 hover:text-red-500 transition-colors duration-300"
+                  className="px-4 py-2 text-gray-600 hover:text-indigo-600 transition-colors duration-300"
                 >
                   Logout
                 </button>
@@ -328,7 +328,7 @@ const Dashboard = ({ token, setIsAuthenticated, view = "all" }) => {
                   onClick={() => setSelectedCategory(selectedCategory === category.id ? null : category.id)}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300
                     ${category.color}
-                    ${selectedCategory === category.id ? 'ring-2 ring-offset-2 ring-red-500' : ''}
+                    ${selectedCategory === category.id ? 'ring-2 ring-offset-2 ring-indigo-500' : ''}
                     hover:shadow-md`}
                 >
                   {category.name}
@@ -338,7 +338,7 @@ const Dashboard = ({ token, setIsAuthenticated, view = "all" }) => {
           </div>
           <Link
             to="/create-post"
-            className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600
+            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700
               transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-md"
           >
             Create Post
@@ -372,15 +372,15 @@ const Dashboard = ({ token, setIsAuthenticated, view = "all" }) => {
                 <p className="text-gray-700 mb-4">{post.description}</p>
                 <div className="flex items-center justify-between text-gray-500">
                   <div className="flex items-center space-x-4">
-                    <button className="flex items-center space-x-1 hover:text-red-500">
+                    <button className="flex items-center space-x-1 hover:text-indigo-600">
                       <FiHeart size={18} />
                       <span>{post.likes}</span>
                     </button>
-                    <button className="flex items-center space-x-1 hover:text-red-500">
+                    <button className="flex items-center space-x-1 hover:text-indigo-600">
                       <FiMessageSquare size={18} />
                       <span>{post.comments}</span>
                     </button>
-                    <button className="flex items-center space-x-1 hover:text-red-500">
+                    <button className="flex items-center space-x-1 hover:text-indigo-600">
                       <FiShare2 size={18} />
                       <span>{post.shares}</span>
                     </button>
@@ -396,7 +396,7 @@ const Dashboard = ({ token, setIsAuthenticated, view = "all" }) => {
           <div className="flex justify-center items-center mt-8 space-x-4">
             <button
               onClick={handlePrevPage}
-              className="p-2 border border-gray-300 rounded-full text-gray-600 hover:bg-gray-100 transition-colors"
+              className="p-2 border border-gray-300 rounded-full text-gray-600 hover:bg-indigo-600 hover:text-white transition-colors"
             >
               <FiChevronLeft size={16} />
             </button>
@@ -405,7 +405,7 @@ const Dashboard = ({ token, setIsAuthenticated, view = "all" }) => {
             </span>
             <button
               onClick={handleNextPage}
-              className="p-2 border border-gray-300 rounded-full text-gray-600 hover:bg-gray-100 transition-colors"
+              className="p-2 border border-gray-300 rounded-full text-gray-600 hover:bg-indigo-600 hover:text-white transition-colors"
             >
               <FiChevronRight size={16} />
             </button>

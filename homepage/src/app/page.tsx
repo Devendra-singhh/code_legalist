@@ -157,7 +157,7 @@ export default function Home() {
   };
 
   return (
-    <div className={`w-full min-h-screen font-sans transition-colors duration-300 ${darkMode ? 'bg-black text-gray-100' : 'bg-white text-gray-900'}`}>
+    <div className={`min-h-screen ${darkMode ? 'bg-black text-white' : 'bg-white text-gray-900'}`}>
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         {/* Background Elements */}
@@ -169,7 +169,16 @@ export default function Home() {
 
         {/* Navbar */}
         <div className={`flex justify-between items-center py-4 px-4 relative z-10 ${darkMode ? 'text-white' : 'text-white'}`}>
-          <h1 className="text-2xl font-bold flex-1">Code Legalist</h1>
+          <h1 className="text-4xl md:text-5xl font-black flex-1 tracking-tight relative group">
+            <span className="relative inline-block">
+              <span className="bg-gradient-to-r from-indigo-200 via-indigo-300 to-indigo-400 bg-clip-text text-transparent transition-all duration-500 group-hover:from-indigo-300 group-hover:to-indigo-500">Code</span>
+              <span className="absolute -inset-1 bg-gradient-to-r from-indigo-200/20 to-indigo-400/20 blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
+            </span>
+            <span className="text-white relative inline-block ml-1">
+              Legalist
+              <span className="absolute -inset-1 bg-gradient-to-r from-white/10 to-white/5 blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
+            </span>
+          </h1>
           
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-6">
@@ -178,18 +187,6 @@ export default function Home() {
               className="hover:text-indigo-200 hover:border-b transition duration-300"
             >
               Find a Lawyer
-            </Link>
-            <Link
-              href="/forum"
-              className="hover:text-indigo-200 hover:border-b transition duration-300"
-            >
-              Forum
-            </Link>
-            <Link
-              href="/chatbot"
-              className="hover:text-indigo-200 hover:border-b transition duration-300"
-            >
-              Chatbot
             </Link>
             <Link
               href="/login"
@@ -225,18 +222,6 @@ export default function Home() {
                 className="hover:text-indigo-200"
               >
                 Find a Lawyer
-              </Link>
-              <Link
-                href="/forum"
-                className="hover:text-indigo-200"
-              >
-                Forum
-              </Link>
-              <Link
-                href="/chatbot"
-                className="hover:text-indigo-200"
-              >
-                Chatbot
               </Link>
               <Link
                 href="/login"
@@ -280,18 +265,22 @@ export default function Home() {
                 href="https://frontend-ausqls22f-rxhulshxrmxs-projects.vercel.app/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group px-8 py-4 bg-white text-indigo-600 rounded-xl hover:bg-indigo-50
+                className="group relative px-8 py-4 bg-white text-indigo-600 rounded-2xl hover:bg-indigo-50
                   transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl
-                  font-semibold text-lg relative overflow-hidden"
+                  font-semibold text-lg overflow-visible"
               >
                 <span className="relative z-10">Ask Legal AI</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-indigo-100 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-indigo-100 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
+                {/* Message bubble tail */}
+                <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-6 h-6 bg-white rotate-45 group-hover:bg-indigo-50 transition-colors duration-300"></div>
               </Link>
               <Link
-                href="/forum"
-                className={`group px-8 py-4 ${darkMode ? 'bg-indigo-900/40 hover:bg-indigo-900/60' : 'bg-white/20 hover:bg-white/30'} text-white rounded-xl
+                href="http://localhost:5173"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group px-8 py-4 bg-indigo-900/40 hover:bg-indigo-900/60 text-white rounded-xl
                   transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl
-                  font-semibold text-lg backdrop-blur-sm border ${darkMode ? 'border-indigo-700/20' : 'border-white/20'}`}
+                  font-semibold text-lg backdrop-blur-sm border border-indigo-700/20"
               >
                 Join Forum
               </Link>
@@ -505,32 +494,25 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className={`py-20 ${darkMode ? 'bg-black' : ''}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className={`text-3xl font-bold text-center mb-12 ${darkMode ? 'text-white' : 'text-gray-900'}`}>What Our Users Say</h2>
-          <div className="flex justify-center">
-            <div className={`max-w-2xl ${darkMode ? 'bg-gray-900/50 border border-gray-800' : 'bg-white'} p-8 rounded-lg shadow-md hover:shadow-lg transition-shadow backdrop-blur-sm`}>
-              <div className="flex items-center mb-6">
-                <div className="w-16 h-16 bg-indigo-900/50 rounded-full flex items-center justify-center">
-                  <span className="text-indigo-400 text-2xl font-semibold">
-                    {testimonials[0].name[0]}
-                  </span>
-                </div>
-                <div className="ml-6">
-                  <h4 className={`text-xl font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{testimonials[0].name}</h4>
-                  <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{testimonials[0].role}</p>
-                </div>
-              </div>
-              <p className={`text-lg ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>{testimonials[0].content}</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* CTA Section */}
-      <section className={`${darkMode ? 'bg-gradient-to-br from-black via-indigo-900 to-indigo-800' : 'bg-gradient-to-r from-indigo-600 to-indigo-700'} text-white py-20`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section className={`relative overflow-hidden ${darkMode ? 'bg-gradient-to-br from-black via-indigo-900 to-indigo-800' : 'bg-gradient-to-r from-indigo-600 to-indigo-700'} text-white py-32`}>
+        {/* Top decorative elements */}
+        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black/50 to-transparent"></div>
+        <div className="absolute top-0 left-0 right-0 opacity-10">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-500 rounded-full mix-blend-overlay filter blur-3xl transform -translate-y-1/2"></div>
+          <div className="absolute top-0 right-1/4 w-96 h-96 bg-indigo-600 rounded-full mix-blend-overlay filter blur-3xl transform -translate-y-1/2"></div>
+        </div>
+
+        {/* Decorative bottom gradient */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/50 to-transparent"></div>
+        
+        {/* Decorative circles */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute bottom-0 left-1/4 w-64 h-64 bg-indigo-500 rounded-full mix-blend-overlay filter blur-3xl transform translate-y-1/2"></div>
+          <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-indigo-600 rounded-full mix-blend-overlay filter blur-3xl transform translate-y-1/2"></div>
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold mb-6">Ready to Get Started?</h2>
           <p className="text-xl mb-8 text-indigo-50">
             Join our community today and take the first step towards better legal
@@ -547,18 +529,13 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className={`mt-2 border-t py-6 text-center ${darkMode ? 'border-gray-800 bg-black' : 'border-gray-200'}`}>
+      <footer className={`border-t py-6 text-center ${darkMode ? 'border-gray-800 bg-black' : 'border-gray-200'}`}>
         <div className="flex justify-center items-center space-x-2">
           <h4 className="text-lg font-bold">Code Legalist</h4>
         </div>
         <p className={darkMode ? "text-gray-400" : "text-gray-600"}>
           Defining Legal Help for the Digital Age.
         </p>
-        <div className="mt-4 flex justify-center space-x-6 text-indigo-600">
-          <Facebook size={24} />
-          <Twitter size={24} />
-          <Instagram size={24} />
-        </div>
         <p className={`mt-4 ${darkMode ? "text-gray-400" : "text-gray-600"}`}>&copy; 2025 Code Legalist</p>
       </footer>
     </div>

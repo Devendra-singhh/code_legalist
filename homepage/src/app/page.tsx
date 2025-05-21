@@ -246,7 +246,7 @@ export default function Home() {
                 <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-6 h-6 bg-white rotate-45 group-hover:bg-indigo-50 transition-colors duration-300"></div>
               </Link>
               <Link
-                href="http://localhost:5173"
+                href="https://forumfrontend-kzyqs2twi-rxhulshxrmxs-projects.vercel.app"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group px-8 py-4 bg-indigo-900/40 hover:bg-indigo-900/60 text-white rounded-xl

@@ -1,10 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { signup } from "../utils/api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
-import { FiSun, FiMoon } from "react-icons/fi";
 
 const Signup = ({ setIsAuthenticated, setToken }) => {
   const [formData, setFormData] = useState({
@@ -15,23 +13,7 @@ const Signup = ({ setIsAuthenticated, setToken }) => {
   });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
   const navigate = useNavigate();
-
-  // Effect to initialize dark mode from system preference
-  useEffect(() => {
-    const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    setDarkMode(isDark);
-  }, []);
-
-  // Effect to apply dark mode class to html element
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [darkMode]);
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -66,77 +48,28 @@ const Signup = ({ setIsAuthenticated, setToken }) => {
   };
 
   return (
-    <div className={`min-h-screen flex flex-col transition-colors duration-300 ${
-      darkMode ? 'bg-gray-900 text-gray-100' : 'bg-gradient-to-br from-red-50 to-red-100 text-gray-900'
-    }`}>
+    <div className="min-h-screen flex flex-col justify-between bg-black">
       <ToastContainer />
 
-      {/* Header with Dark Mode Toggle */}
-      <header className={`sticky top-0 z-50 shadow-sm transition-colors duration-300 ${
-        darkMode ? 'bg-gray-800 border-b border-gray-700' : 'bg-white border-b border-gray-200'
-      }`}>
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-6">
-              <h1 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-                Chat Legalist
-              </h1>
-              <span className="text-gray-300">|</span>
-              <span className={`text-lg ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                Legal Forum
-              </span>
-            </div>
+      <main className="flex-grow flex items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
+        <div className="w-full max-w-md">
+          <h2 className="text-3xl sm:text-4xl font-bold text-center text-white mb-6">
+            Create Account
+          </h2>
 
-            {/* Dark Mode Toggle */}
-            <button
-              onClick={() => setDarkMode(!darkMode)}
-              className={`p-2 rounded-full transition duration-300 flex items-center justify-center ${
-                darkMode 
-                  ? 'hover:bg-gray-700'
-                  : 'hover:bg-gray-100'
-              }`}
-              aria-label="Toggle dark mode"
-            >
-              {darkMode ? (
-                <FiSun size={20} className="text-yellow-300" />
-              ) : (
-                <FiMoon size={20} className="text-gray-700" />
-              )}
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <div className="flex-grow flex flex-col justify-center px-4 py-8 sm:px-6 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <h2 className={`text-center text-3xl font-extrabold ${
-            darkMode ? 'text-red-400' : 'text-red-600'
-          }`}>Sign up</h2>
-          <p className={`mt-2 text-center text-sm ${
-            darkMode ? 'text-gray-300' : 'text-gray-600'
-          }`}>
-            Join Code Legalist and make legal support more accessible.
-          </p>
-        </div>
-
-        <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-md">
-          <div className={`shadow-lg rounded-xl p-6 sm:p-8 border-t-4 border-red-500 ${
-            darkMode ? 'bg-gray-800' : 'bg-white'
-          }`}>
+          <div className="bg-gray-950 shadow-lg rounded-xl p-6 sm:p-8 border-t-4 border-indigo-500">
             {error && (
-              <div className="mb-4 bg-red-50 border-l-4 border-red-500 p-3 text-red-700 text-sm">
-                {error}
+              <div className="mb-4 bg-red-900/50 border-l-4 border-red-500 p-3 rounded">
+                <p className="text-sm text-red-300">{error}</p>
               </div>
             )}
 
-            <form className="space-y-4" onSubmit={handleSubmit}>
+            <form className="space-y-5" onSubmit={handleSubmit}>
               {["firstName", "lastName", "username", "password"].map((field) => (
                 <div key={field}>
                   <label
                     htmlFor={field}
-                    className={`block text-sm font-medium ${
-                      darkMode ? 'text-gray-200' : 'text-gray-700'
-                    } capitalize`}
+                    className="block text-sm font-medium text-gray-200 capitalize"
                   >
                     {field === "password"
                       ? "Password (min 6 characters)"
@@ -161,12 +94,7 @@ const Signup = ({ setIsAuthenticated, setToken }) => {
                         ? "family-name"
                         : field
                     }
-                    className={`mt-1 block w-full px-3 py-2 rounded-md shadow-sm 
-                      focus:ring-red-500 focus:border-red-500 text-sm sm:text-base
-                      ${darkMode 
-                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
-                        : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                      }`}
+                    className="mt-1 block w-full px-4 py-2 border border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-gray-900 text-white placeholder-gray-400"
                   />
                 </div>
               ))}
@@ -174,9 +102,11 @@ const Signup = ({ setIsAuthenticated, setToken }) => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className={`w-full flex justify-center items-center py-2 px-4 rounded-md text-sm sm:text-base font-medium text-white ${
-                  isLoading ? "bg-red-400" : "bg-red-600 hover:bg-red-700"
-                } focus:outline-none focus:ring-2 focus:ring-red-500`}
+                className={`w-full flex justify-center items-center py-2 px-4 rounded-md text-sm font-medium text-white transition ${
+                  isLoading
+                    ? "bg-indigo-400 cursor-not-allowed"
+                    : "bg-indigo-600 hover:bg-indigo-700"
+                } focus:outline-none focus:ring-2 focus:ring-indigo-500`}
               >
                 {isLoading ? (
                   <>
@@ -186,7 +116,14 @@ const Signup = ({ setIsAuthenticated, setToken }) => {
                       fill="none"
                       viewBox="0 0 24 24"
                     >
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
                       <path
                         className="opacity-75"
                         fill="currentColor"
@@ -201,62 +138,28 @@ const Signup = ({ setIsAuthenticated, setToken }) => {
               </button>
             </form>
 
-            <div className={`mt-6 text-center text-sm ${
-              darkMode ? 'text-gray-300' : 'text-gray-600'
-            }`}>
+            <div className="mt-6 text-center text-sm text-gray-400">
               Already have an account?{" "}
-              <Link to="/" className={`font-medium ${
-                darkMode ? 'text-red-400 hover:text-red-300' : 'text-red-600 hover:text-red-500'
-              }`}>
+              <Link
+                to="/login"
+                className="font-medium text-indigo-400 hover:text-indigo-300"
+              >
                 Log in
               </Link>
             </div>
           </div>
         </div>
-      </div>
+      </main>
 
-      <footer className={`border-t py-6 mt-10 transition-colors duration-300 ${
-        darkMode 
-          ? 'bg-gray-800 border-gray-700' 
-          : 'bg-gradient-to-br from-red-50 to-red-100 border-gray-200'
-      }`}>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row justify-between items-center">
-          <div className="text-center md:text-left mb-4 md:mb-0">
-            <h4 className={`text-lg font-bold ${
-              darkMode ? 'text-white' : 'text-gray-800'
-            }`}>Code Legalist</h4>
-            <p className={`text-sm ${
-              darkMode ? 'text-gray-300' : 'text-gray-600'
-            }`}>
-              Providing legal awareness and solutions for everyone
-            </p>
-          </div>
-          <div className="text-center md:text-right">
-            <p className={`text-sm mb-2 ${
-              darkMode ? 'text-gray-300' : 'text-gray-700'
-            }`}>Follow us on social media</p>
-            <div className="flex justify-center md:justify-end space-x-4">
-              <a href="#" aria-label="Facebook" className={`${
-                darkMode ? 'text-red-400 hover:text-red-300' : 'text-red-500 hover:text-red-700'
-              }`}>
-                <FaFacebook size={20} />
-              </a>
-              <a href="#" aria-label="Twitter" className={`${
-                darkMode ? 'text-red-400 hover:text-red-300' : 'text-red-500 hover:text-red-700'
-              }`}>
-                <FaTwitter size={20} />
-              </a>
-              <a href="#" aria-label="Instagram" className={`${
-                darkMode ? 'text-red-400 hover:text-red-300' : 'text-red-500 hover:text-red-700'
-              }`}>
-                <FaInstagram size={20} />
-              </a>
-            </div>
+      <footer className="bg-black border-t border-gray-800 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="text-center">
+            <h4 className="text-lg font-semibold text-white">Code Legalist</h4>
+            <p className="text-sm text-gray-400">Legal awareness & solutions for everyone</p>
           </div>
         </div>
-        <div className={`mt-4 text-center text-xs ${
-          darkMode ? 'text-gray-400' : 'text-gray-600'
-        }`}>
+
+        <div className="mt-4 text-center text-xs text-gray-500">
           &copy; {new Date().getFullYear()} Code Legalist. All rights reserved.
         </div>
       </footer>

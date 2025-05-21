@@ -3,7 +3,6 @@ import { useNavigate, Link } from "react-router-dom";
 import { login } from "../utils/api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
 
 const Login = ({ setIsAuthenticated, setToken }) => {
   const [formData, setFormData] = useState({ username: "", password: "" });
@@ -37,19 +36,19 @@ const Login = ({ setIsAuthenticated, setToken }) => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-gradient-to-br from-red-50 to-red-100">
+    <div className="min-h-screen flex flex-col justify-between bg-black">
       <ToastContainer />
 
       <main className="flex-grow flex items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
         <div className="w-full max-w-md">
-          <h2 className="text-3xl sm:text-4xl font-bold text-center text-red-600 mb-6">
+          <h2 className="text-3xl sm:text-4xl font-bold text-center text-white mb-6">
             Welcome Back
           </h2>
 
-          <div className="bg-white shadow-lg rounded-xl p-6 sm:p-8 border-t-4 border-red-500">
+          <div className="bg-gray-950 shadow-lg rounded-xl p-6 sm:p-8 border-t-4 border-indigo-500">
             {error && (
-              <div className="mb-4 bg-red-50 border-l-4 border-red-500 p-3 rounded">
-                <p className="text-sm text-red-700">{error}</p>
+              <div className="mb-4 bg-red-900/50 border-l-4 border-red-500 p-3 rounded">
+                <p className="text-sm text-red-300">{error}</p>
               </div>
             )}
 
@@ -57,7 +56,7 @@ const Login = ({ setIsAuthenticated, setToken }) => {
               <div>
                 <label
                   htmlFor="username"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-200"
                 >
                   Username
                 </label>
@@ -69,14 +68,14 @@ const Login = ({ setIsAuthenticated, setToken }) => {
                   value={formData.username}
                   onChange={handleChange}
                   autoComplete="username"
-                  className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 text-sm"
+                  className="mt-1 block w-full px-4 py-2 border border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-gray-900 text-white placeholder-gray-400"
                 />
               </div>
 
               <div>
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-200"
                 >
                   Password
                 </label>
@@ -89,7 +88,7 @@ const Login = ({ setIsAuthenticated, setToken }) => {
                   value={formData.password}
                   onChange={handleChange}
                   autoComplete="current-password"
-                  className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 text-sm"
+                  className="mt-1 block w-full px-4 py-2 border border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-gray-900 text-white placeholder-gray-400"
                 />
               </div>
 
@@ -98,9 +97,9 @@ const Login = ({ setIsAuthenticated, setToken }) => {
                 disabled={isLoading}
                 className={`w-full flex justify-center items-center py-2 px-4 rounded-md text-sm font-medium text-white transition ${
                   isLoading
-                    ? "bg-red-400 cursor-not-allowed"
-                    : "bg-red-600 hover:bg-red-700"
-                } focus:outline-none focus:ring-2 focus:ring-red-500`}
+                    ? "bg-indigo-400 cursor-not-allowed"
+                    : "bg-indigo-600 hover:bg-indigo-700"
+                } focus:outline-none focus:ring-2 focus:ring-indigo-500`}
               >
                 {isLoading ? (
                   <>
@@ -132,11 +131,11 @@ const Login = ({ setIsAuthenticated, setToken }) => {
               </button>
             </form>
 
-            <div className="mt-6 text-center text-sm text-gray-600">
+            <div className="mt-6 text-center text-sm text-gray-400">
               Don&apos;t have an account?{" "}
               <Link
                 to="/signup"
-                className="font-medium text-red-600 hover:text-red-500"
+                className="font-medium text-indigo-400 hover:text-indigo-300"
               >
                 Sign up
               </Link>
@@ -145,30 +144,15 @@ const Login = ({ setIsAuthenticated, setToken }) => {
         </div>
       </main>
 
-      <footer className="bg-gradient-to-br from-red-50 to-red-100 border-t border-gray-200 py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="text-center md:text-left">
-            <h4 className="text-lg font-semibold text-gray-800">Code Legalist</h4>
-            <p className="text-sm text-gray-600">Legal awareness & solutions for everyone</p>
-          </div>
-
-          <div className="text-center md:text-right">
-            <p className="text-sm text-gray-700 mb-2">Follow us</p>
-            <div className="flex justify-center md:justify-end gap-4 text-red-500">
-              <a href="#" aria-label="Facebook" className="hover:text-red-700">
-                <FaFacebook size={20} />
-              </a>
-              <a href="#" aria-label="Twitter" className="hover:text-red-700">
-                <FaTwitter size={20} />
-              </a>
-              <a href="#" aria-label="Instagram" className="hover:text-red-700">
-                <FaInstagram size={20} />
-              </a>
-            </div>
+      <footer className="bg-black border-t border-gray-800 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="text-center">
+            <h4 className="text-lg font-semibold text-white">Code Legalist</h4>
+            <p className="text-sm text-gray-400">Legal awareness & solutions for everyone</p>
           </div>
         </div>
 
-        <div className="mt-4 text-center text-xs text-gray-600">
+        <div className="mt-4 text-center text-xs text-gray-500">
           &copy; {new Date().getFullYear()} Code Legalist. All rights reserved.
         </div>
       </footer>

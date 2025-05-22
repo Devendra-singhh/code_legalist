@@ -22,7 +22,7 @@ router.post('/', auth, async (req, res) => {
 });
 
 // Get all posts
-router.get('/', auth, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const posts = await Post.find().sort({ createdAt: -1 });
     res.send(posts);

@@ -112,7 +112,7 @@ export default function Home() {
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-6">
             <Link
-              href="/find-lawyer"
+              href="https://lawyer.sloq.me"
               className="hover:text-indigo-200 hover:border-b transition duration-300"
             >
               Find a Lawyer
@@ -138,7 +138,7 @@ export default function Home() {
           {menuOpen && (
             <div className="absolute top-full left-0 w-full shadow-md flex flex-col items-center space-y-4 py-4 md:hidden z-10 bg-indigo-600/95 backdrop-blur-sm">
               <Link
-                href="/find-lawyer"
+                href="https://lawyer.sloq.me"
                 className="hover:text-indigo-200"
               >
                 Find a Lawyer
@@ -178,7 +178,7 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-6">
               <Link
-                href="https://frontend-ausqls22f-rxhulshxrmxs-projects.vercel.app/"
+                href="https://chat.sloq.me"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group relative px-8 py-4 bg-white text-indigo-600 rounded-2xl hover:bg-indigo-50
@@ -191,7 +191,7 @@ export default function Home() {
                 <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-6 h-6 bg-white rotate-45 group-hover:bg-indigo-50 transition-colors duration-300"></div>
               </Link>
               <Link
-                href="https://forumfrontend-kzyqs2twi-rxhulshxrmxs-projects.vercel.app"
+                href="https://forum.sloq.me"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group px-8 py-4 bg-indigo-900/40 hover:bg-indigo-900/60 text-white rounded-xl
@@ -284,7 +284,7 @@ export default function Home() {
             Discover answers, connect with legal experts, and get guidance for any legal challenge. Fast, easy, and personalized. Your journey to clarity starts here.
           </p>
           <Link
-            href="/find-lawyer"
+            href="https://lawyer.sloq.me"
             className="px-8 py-3 bg-white text-indigo-600 rounded-lg hover:bg-indigo-50
               transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-md"
           >

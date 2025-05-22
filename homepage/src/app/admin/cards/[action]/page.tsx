@@ -15,7 +15,8 @@ interface ContentCard {
   stats?: string;
 }
 
-export default function CardForm({ params }: { params: { action: string } }) {
+export default function CardForm(props: any) {
+  const { params } = props;
   const router = useRouter();
   const isEdit = params.action !== 'new';
   const [loading, setLoading] = useState(false);

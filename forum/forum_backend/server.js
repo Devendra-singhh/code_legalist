@@ -9,7 +9,10 @@ const allowedOrigins = [
   'http://localhost:3000',  // Next.js dev server
   'http://localhost:5173',  // Vite dev server
   'https://code-legalist.vercel.app',  // Production Next.js
-  'https://code-legalist-forum.vercel.app'  // Production Vite
+  'https://code-legalist-forum.vercel.app',  // Production Vite
+  'https://sloq.me',
+  'https://forum.sloq.me',
+  'https://chat.sloq.me'
 ];
 
 const corsOptions = {

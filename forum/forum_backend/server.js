@@ -38,7 +38,8 @@ const app = express();
 app.use(express.json());
 app.use(cors(corsOptions));
 
-
+// Add global OPTIONS handler for CORS preflight
+app.options('*', cors(corsOptions));
 
 // Connect to MongoDB
 connectDB();

@@ -1,8 +1,8 @@
 // Production URLs
 export const PRODUCTION_URLS = {
-  HOMEPAGE: 'https://homepage-agurhz0qg-rxhulshxrmxs-projects.vercel.app',
-  FORUM_FRONTEND: 'https://forumfrontend-kzyqs2twi-rxhulshxrmxs-projects.vercel.app',
-  BACKEND_API: 'https://forumbackend-e759zx3lh-rxhulshxrmxs-projects.vercel.app'
+  HOMEPAGE: 'https://sloq.me',
+  FORUM_FRONTEND: 'https://forum.sloq.me',
+  BACKEND_API: 'https://forumbackend-chi.vercel.app'
 };
 
 // Development URLs

@@ -2,7 +2,7 @@
 export const PRODUCTION_URLS = {
   HOMEPAGE: 'https://sloq.me',
   FORUM_FRONTEND: 'https://forum.sloq.me',
-  BACKEND_API: 'https://forumbackend-chi.vercel.app'
+  BACKEND_API: 'https://forumbackend-hgkfwhvnp-rxhulshxrmxs-projects.vercel.app'
 };
 
 // Development URLs

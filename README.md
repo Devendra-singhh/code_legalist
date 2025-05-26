@@ -8,7 +8,7 @@ Code Legalist is a modern web platform built to make legal help easier to access
 - Forum: https://forum.sloq.me  
 - Chatbot: https://chat.sloq.me  
 - Find a Lawyer: https://lawyer.sloq.me
-- Admin Panel: sloq.me/admin
+- Admin Panel: https://sloq.me/admin
 
 ## Project Overview
 

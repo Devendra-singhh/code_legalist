@@ -1,6 +1,7 @@
 # Code Legalist
 
-Code Legalist is a modern web platform built to make legal help easier to access and understand. It includes a simple homepage, a public legal forum, an AI-powered chatbot, and a tool to find lawyers.
+Code Legalist is a modern web platform built to make legal help easier to access and understand. It includes a simple homepage, a public legal forum, an AI-powered chatbot, and a tool to find lawyers. [Download Presentation](https://www.canva.com/design/DAGoL63VBWQ/Yenv4iRXxzIsf59qkEI_WQ/edit?utm_content=DAGoL63VBWQ&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+
 
 ## Live URLs
 
@@ -32,3 +33,5 @@ Code Legalist is a modern web platform built to make legal help easier to access
 ### Find a Lawyer (https://lawyer.sloq.me)
 - Helps users connect with legal professionals
 - Searchable and easy-to-use
+
+  

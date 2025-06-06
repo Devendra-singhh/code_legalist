@@ -1,37 +1,102 @@
 # Code Legalist
 
-Code Legalist is a modern web platform built to make legal help easier to access and understand. It includes a simple homepage, a public legal forum, an AI-powered chatbot, and a tool to find lawyers. [Download Presentation](https://www.canva.com/design/DAGoL63VBWQ/Yenv4iRXxzIsf59qkEI_WQ/edit?utm_content=DAGoL63VBWQ&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+Code Legalist is a comprehensive legal technology platform that makes legal assistance accessible, understandable, and efficient. The platform combines multiple components to provide a complete legal solution for users.
 
+## 🌟 Features
 
-## Live URLs
+### 1. AI-Powered Legal Assistant
+- Real-time legal consultation through AI chatbot
+- Context-aware responses based on Indian laws
+- Multiple AI models for enhanced accuracy
+- Natural language understanding for complex legal queries
 
-- Homepage: https://sloq.me  
-- Forum: https://forum.sloq.me  
-- Chatbot: https://chat.sloq.me  
-- Find a Lawyer: https://lawyer.sloq.me
+### 2. Legal Forum
+- Community-driven legal discussions
+- Category-based organization
+- Advanced search functionality
+- Dark mode support
+- Guest access capabilities
+- Real-time notifications
+
+### 3. Lawyer Finder
+- Comprehensive lawyer search
+- Detailed lawyer profiles
+- Specialization-based filtering
+- Location-based search
+- Rating and review system
+
+### 4. Modern Homepage
+- Clean, intuitive interface
+- Quick access to all platform features
+- Trending legal topics
+- Smart search integration
+- Responsive design
+
+## 🚀 Live URLs
+
+- Main Platform: https://sloq.me
+- Legal Forum: https://forum.sloq.me
+- AI Chatbot: https://chat.sloq.me
+- Lawyer Finder: https://lawyer.sloq.me
 - Admin Panel: https://sloq.me/admin
 
-## Project Overview
+## 🏗️ Project Structure
 
-### Homepage (https://sloq.me)
-- Clean, user-friendly landing page
-- Search bar for queries
-- Highlights trending legal topics
-- Quick links to chatbot, forum, and lawyer search
+```
+code_legalist/
+├── homepage/           # Main landing page
+├── forum/             # Legal discussion forum
+├── chatbot/           # AI-powered legal chatbot
+└── lawyer_finder/     # Lawyer search and matching
+```
 
-### Forum (https://forum.sloq.me)
-- Lets users post and read legal discussions
-- Posts organized by categories
-- Includes search, dark mode, pagination
-- Guest login supported
+## 🛠️ Technology Stack
 
-### Chatbot (https://chat.sloq.me)
-- Users can ask legal questions
-- AI generates answers based on Indian laws
-- Uses multiple models for better accuracy
+- Frontend: React.js, Next.js
+- Backend: Node.js, Express
+- Database: MongoDB
+- AI/ML: OpenAI GPT, Custom Models
+- Authentication: JWT, OAuth
+- Deployment: Docker, AWS
 
-### Find a Lawyer (https://lawyer.sloq.me)
-- Helps users connect with legal professionals
-- Searchable and easy-to-use
+## 🚀 Getting Started
+
+1. Clone the repository
+2. Install dependencies for each component
+3. Set up environment variables
+4. Run development servers
+5. Access the platform locally
+
+For detailed setup instructions, see [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)
+
+## 📝 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🤝 Contributing
+
+We welcome contributions! Please read our contributing guidelines before submitting pull requests.
+
+## 📞 Support
+
+For support, please email support@sloq.me or create an issue in the repository.
+
+## 📂 Project Folders Overview
+
+### Homepage
+- A clean, user-friendly landing page that serves as the main entry point for the platform.
+- Features a search bar, trending legal topics, and quick links to other components.
+
+### Forum
+- A community-driven legal discussion platform where users can post and read legal discussions.
+- Includes features like category-based organization, search, dark mode, and guest login.
+
+### Chatbot
+- An AI-powered legal assistant that provides real-time legal consultation.
+- Generates context-aware responses based on Indian laws using multiple AI models.
+
+### Lawyer Finder
+- A tool designed to help users connect with legal professionals.
+- Features include comprehensive lawyer search, detailed profiles, and specialization-based filtering.
 
   

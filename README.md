@@ -32,7 +32,7 @@ Code Legalist is a comprehensive legal technology platform that makes legal assi
 - Smart search integration
 - Responsive design
 
-## 🚀 Live URLs
+## Live URLs
 
 - Main Platform: https://sloq.me
 - Legal Forum: https://forum.sloq.me
@@ -40,7 +40,7 @@ Code Legalist is a comprehensive legal technology platform that makes legal assi
 - Lawyer Finder: https://lawyer.sloq.me
 - Admin Panel: https://sloq.me/admin
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 code_legalist/
@@ -50,7 +50,7 @@ code_legalist/
 └── lawyer_finder/     # Lawyer search and matching
 ```
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 - Frontend: React.js, Next.js
 - Backend: Node.js, Express
@@ -59,7 +59,7 @@ code_legalist/
 - Authentication: JWT, OAuth
 - Deployment: Docker, AWS
 
-## 🚀 Getting Started
+## Getting Started
 
 1. Clone the repository
 2. Install dependencies for each component
@@ -67,21 +67,7 @@ code_legalist/
 4. Run development servers
 5. Access the platform locally
 
-For detailed setup instructions, see [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)
-
-## 📝 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🤝 Contributing
-
-We welcome contributions! Please read our contributing guidelines before submitting pull requests.
-
-## 📞 Support
-
-For support, please email support@sloq.me or create an issue in the repository.
-
-## 📂 Project Folders Overview
+## Project Folders Overview
 
 ### Homepage
 - A clean, user-friendly landing page that serves as the main entry point for the platform.

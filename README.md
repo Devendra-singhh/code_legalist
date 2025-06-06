@@ -44,7 +44,7 @@ Code Legalist is a comprehensive legal technology platform that makes legal assi
 
 ```
 code_legalist/
-├── homepage/           # Main landing page
+├── homepage/          # Main landing page
 ├── forum/             # Legal discussion forum
 ├── chatbot/           # AI-powered legal chatbot
 └── lawyer_finder/     # Lawyer search and matching
@@ -53,9 +53,9 @@ code_legalist/
 ## Technology Stack
 
 - Frontend: React.js, Next.js
-- Backend: Node.js, Express
+- Backend: Node.js, Express, FastAPI
 - Database: MongoDB, Supabase
-- AI/ML: OpenAI GPT, Custom Models
+- AI/ML: Mistral, Gemini, Cosine Similarity
 - Authentication: JWT, OAuth
 - Deployment: Docker, AWS
 

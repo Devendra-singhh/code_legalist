@@ -54,7 +54,7 @@ code_legalist/
 
 - Frontend: React.js, Next.js
 - Backend: Node.js, Express
-- Database: MongoDB
+- Database: MongoDB, Supabase
 - AI/ML: OpenAI GPT, Custom Models
 - Authentication: JWT, OAuth
 - Deployment: Docker, AWS

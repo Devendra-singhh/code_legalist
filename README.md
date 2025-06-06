@@ -2,7 +2,7 @@
 
 Code Legalist is a comprehensive legal technology platform that makes legal assistance accessible, understandable, and efficient. The platform combines multiple components to provide a complete legal solution for users.
 
-## 🌟 Features
+## Features
 
 ### 1. AI-Powered Legal Assistant
 - Real-time legal consultation through AI chatbot

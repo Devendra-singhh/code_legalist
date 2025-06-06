@@ -59,14 +59,6 @@ code_legalist/
 - Authentication: JWT, OAuth
 - Deployment: Docker, AWS
 
-## Getting Started
-
-1. Clone the repository
-2. Install dependencies for each component
-3. Set up environment variables
-4. Run development servers
-5. Access the platform locally
-
 ## Project Folders Overview
 
 ### Homepage

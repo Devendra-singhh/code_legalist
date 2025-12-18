@@ -18,6 +18,7 @@ const isDevelopment = import.meta.env.DEV;
 export const URLS = isDevelopment ? DEVELOPMENT_URLS : PRODUCTION_URLS;
 
 // Export individual URLs for convenience
-export const API_BASE_URL = URLS.BACKEND_API;
+// Allow override via VITE_API_URL set in the environment (e.g., Vercel UI)
+export const API_BASE_URL = import.meta.env.VITE_API_URL || URLS.BACKEND_API;
 export const HOMEPAGE_URL = URLS.HOMEPAGE;
 export const FORUM_URL = URLS.FORUM_FRONTEND;

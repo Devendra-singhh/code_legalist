@@ -25,7 +25,7 @@ async function checkDatabase() {
         SELECT COUNT(*) as count FROM embeddings;
       `);
       
-      const count = countResult[0]?.count || 0;
+      const count = Number(countResult[0]?.count || 0);
       console.log(`\nFound ${count} embeddings in the database`);
       
       if (count > 0) {

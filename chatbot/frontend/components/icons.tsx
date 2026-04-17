@@ -1,4 +1,6 @@
-export const BotIcon = () => {
+import { SVGProps } from "react";
+
+export const BotIcon = (props: SVGProps<SVGSVGElement>) => {
   return (
     <svg
       height="16"
@@ -6,6 +8,7 @@ export const BotIcon = () => {
       viewBox="0 0 16 16"
       width="16"
       style={{ color: "currentcolor" }}
+      {...props}
     >
       <path
         fillRule="evenodd"
@@ -17,7 +20,7 @@ export const BotIcon = () => {
   );
 };
 
-export const UserIcon = () => {
+export const UserIcon = (props: SVGProps<SVGSVGElement>) => {
   return (
     <svg
       data-testid="geist-icon"
@@ -26,6 +29,7 @@ export const UserIcon = () => {
       viewBox="0 0 16 16"
       width="16"
       style={{ color: "currentcolor" }}
+      {...props}
     >
       <path
         fillRule="evenodd"
@@ -37,7 +41,7 @@ export const UserIcon = () => {
   );
 };
 
-export const AttachmentIcon = () => {
+export const AttachmentIcon = (props: SVGProps<SVGSVGElement>) => {
   return (
     <svg
       height="16"
@@ -45,6 +49,7 @@ export const AttachmentIcon = () => {
       viewBox="0 0 16 16"
       width="16"
       style={{ color: "currentcolor" }}
+      {...props}
     >
       <path
         fillRule="evenodd"
@@ -56,7 +61,7 @@ export const AttachmentIcon = () => {
   );
 };
 
-export const VercelIcon = () => {
+export const VercelIcon = (props: SVGProps<SVGSVGElement>) => {
   return (
     <svg
       height={17}
@@ -64,6 +69,7 @@ export const VercelIcon = () => {
       viewBox="0 0 16 16"
       width={17}
       style={{ color: "currentcolor" }}
+      {...props}
     >
       <path
         fillRule="evenodd"

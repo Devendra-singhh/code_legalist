@@ -7,9 +7,9 @@ export const PRODUCTION_URLS = {
 
 // Development URLs
 export const DEVELOPMENT_URLS = {
-  HOMEPAGE: 'http://localhost:3000',
-  FORUM_FRONTEND: 'http://localhost:5173',
-  BACKEND_API: 'http://localhost:5000'
+  HOMEPAGE: 'http://localhost:3001',
+  FORUM_FRONTEND: 'http://localhost:3002',
+  BACKEND_API: 'http://localhost:3003'
 };
 
 // Use production URLs by default, or development if in development mode

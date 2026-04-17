@@ -3,7 +3,7 @@ import { NextRequest } from "next/server";
 import { Message } from "ai";
 
 // Get the backend URL from environment variables or use localhost as fallback
-const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8000';
+const BACKEND_URL = process.env.BACKEND_URL || 'http://127.0.0.1:3005';
 
 export const runtime = 'edge';
 
@@ -19,74 +19,56 @@ export async function POST(req: NextRequest) {
   try {
     // Parse request body
     const body = await req.json();
-    
+
     if (!body.messages) {
       return Response.json({ error: "No messages provided" }, { status: 400 });
     }
 
-    // Get the last user message
-    const lastUserMessage = body.messages[body.messages.length - 1];
+    // Get the last user message and history
+    const messages = body.messages || [];
+    const lastUserMessage = messages[messages.length - 1];
     const query = lastUserMessage.content;
+    const history = messages.slice(0, -1).map((m: any) => ({
+      role: m.role,
+      content: m.content
+    }));
 
-    // Call backend API
     const backendResponse = await fetch(`${BACKEND_URL}/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query }),
+      body: JSON.stringify({ query, history }),
     });
 
     // Get the raw backend data
+    if (!backendResponse.ok) {
+      throw new Error(`Backend responded with status: ${backendResponse.status}`);
+    }
     const backendData = await backendResponse.json();
-    
+
     // Format response for display
     let responseText = "";
-    
+
     if (backendData.response) {
       const lawyerResponse = backendData.response.lawyer_response;
-      const modelUsed = backendData.response.model_used || 'unknown';
-      
-      // If we have a lawyer response, use that
+      const entities = backendData.response.extracted_legal_entities || [];
+
       if (lawyerResponse) {
         responseText = formatResponse(lawyerResponse);
       } else {
-        // Fallback to raw data format if no lawyer response
-        const entities = backendData.response.extracted_legal_entities || [];
-        const iKResults = backendData.response.indian_kanoon_results || {};
-        
-        responseText = `Query: ${query}\n\n`;
-        
-        if (entities.length > 0) {
-          responseText += `Entities: ${entities.join(', ')}\n\n`;
-        }
-        
-        responseText += `Results: ${JSON.stringify(iKResults, null, 2)}`;
+        responseText = `### 🔍 Analysis of "${query}"\n\nNo specific legal advice was generated for this query. However, I found some relevant information from the legal database:\n\n*   **Extracted Entities**: ${entities.length > 0 ? entities.join(', ') : "None identified"}\n*   **Database Search**: Completed successfully.\n\nPlease try rephrasing your question with more specific legal details.`;
       }
     } else {
-      responseText = JSON.stringify(backendData);
+      responseText = "I'm sorry, I encountered an issue processing your request. Please try again or rephrase your question.";
     }
-    
-    // Return a correctly formatted response for the frontend
-    const message: Message = {
-      id: Date.now().toString(),
-      role: "assistant",
-      content: responseText,
-      createdAt: new Date()
-    };
 
-    return new Response(JSON.stringify(message));
-    
+    // Return plain text for the frontend useChat hook (v2 compatible)
+    return new Response(responseText, {
+      headers: { 'Content-Type': 'text/plain' }
+    });
+
   } catch (error) {
     console.error("Error:", error);
-    
-    // Return error in compatible format
-    const errorMessage: Message = {
-      id: Date.now().toString(),
-      role: "assistant",
-      content: "Error processing request",
-      createdAt: new Date()
-    };
-    
-    return new Response(JSON.stringify(errorMessage), { status: 200 });
+    return new Response("Error processing request", { status: 500 });
   }
 }
 

@@ -36,21 +36,19 @@ function ModelToggle({ currentModel, onChange }: { currentModel: string, onChang
     <div className="bg-zinc-100 dark:bg-zinc-800 rounded-full p-0.5 flex items-center text-xs">
       <button
         onClick={() => onChange("mistral")}
-        className={`px-2 py-0.5 rounded-full transition-all ${
-          currentModel === "mistral" 
-            ? "bg-white dark:bg-zinc-700 shadow-sm" 
-            : "text-zinc-500 dark:text-zinc-400"
-        }`}
+        className={`px-2 py-0.5 rounded-full transition-all ${currentModel === "mistral"
+          ? "bg-white dark:bg-zinc-700 shadow-sm"
+          : "text-zinc-500 dark:text-zinc-400"
+          }`}
       >
         M
       </button>
       <button
         onClick={() => onChange("gemini")}
-        className={`px-2 py-0.5 rounded-full transition-all ${
-          currentModel === "gemini" 
-            ? "bg-white dark:bg-zinc-700 shadow-sm" 
-            : "text-zinc-500 dark:text-zinc-400"
-        }`}
+        className={`px-2 py-0.5 rounded-full transition-all ${currentModel === "gemini"
+          ? "bg-white dark:bg-zinc-700 shadow-sm"
+          : "text-zinc-500 dark:text-zinc-400"
+          }`}
       >
         G
       </button>
@@ -99,7 +97,7 @@ export default function Home() {
   const [debugInfo, setDebugInfo] = useState<any>(null);
   const [modelPreference, setModelPreference] = useState<string>("mistral");
   const [isLoading, setIsLoading] = useState(false);
-  
+
   // Get current model preference on initial load
   useEffect(() => {
     fetch('/api/model-preference')
@@ -111,7 +109,7 @@ export default function Home() {
         console.error('Error fetching model preference:', err);
       });
   }, []);
-  
+
   // Handle model toggle
   const handleModelChange = async (model: string) => {
     try {
@@ -122,7 +120,7 @@ export default function Home() {
         },
         body: JSON.stringify({ model }),
       });
-      
+
       if (response.ok) {
         setModelPreference(model);
         toast.success(`Switched to ${model === 'mistral' ? 'Mistral AI' : 'Google Gemini'}`);
@@ -134,7 +132,7 @@ export default function Home() {
       toast.error('Failed to switch AI model');
     }
   };
-  
+
   const { messages, input, handleInputChange, handleSubmit } = useChat({
     api: "/api/chat",
     onError: (err: Error) => {
@@ -160,6 +158,16 @@ export default function Home() {
   const inputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null); // Reference for the hidden file input
   const [isDragging, setIsDragging] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // Monitor scroll for header shadow
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handlePaste = (event: React.ClipboardEvent) => {
     const items = event.clipboardData?.items;
@@ -266,13 +274,23 @@ export default function Home() {
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     >
-      {debugInfo && <DebugInfo errorState={debugInfo} />}
-      
-      {/* Model Toggle in Top Right */}
-      <div className="absolute top-4 right-4 z-10">
-        <ModelToggle currentModel={modelPreference} onChange={handleModelChange} />
+
+      {/* Professional Header */}
+      <div className={`fixed top-0 left-0 right-0 z-20 transition-all duration-300 ${isScrolled ? "bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md shadow-sm border-b dark:border-zinc-800" : ""}`}>
+        <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="bg-indigo-600 p-1.5 rounded-lg">
+              <BotIcon className="text-white" />
+            </div>
+            <div>
+              <h1 className="font-bold text-zinc-900 dark:text-zinc-100 leading-none">Code Legalist</h1>
+              <p className="text-[10px] text-zinc-500 uppercase tracking-wider font-semibold mt-1">AI Legal Consultant</p>
+            </div>
+          </div>
+          <ModelToggle currentModel={modelPreference} onChange={handleModelChange} />
+        </div>
       </div>
-      
+
       <AnimatePresence>
         {isDragging && (
           <motion.div
@@ -295,22 +313,21 @@ export default function Home() {
             {messages.map((message, index) => (
               <motion.div
                 key={message.id}
-                className={`flex flex-row gap-2 px-4 w-full md:w-[500px] md:px-0 ${
-                  index === 0 ? "pt-20" : ""
-                }`}
+                className={`flex flex-col w-full max-w-3xl px-4 ${index === 0 ? "pt-24" : "pt-2"
+                  } pb-2`}
                 initial={{ y: 5, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
               >
-                <div className="size-[24px] flex flex-col justify-center items-center flex-shrink-0 text-zinc-400">
-                  {message.role === "assistant" ? <BotIcon /> : <UserIcon />}
-                </div>
-
-                <div className="flex flex-col gap-2">
-                  <div className="text-zinc-800 dark:text-zinc-300 flex flex-col gap-4 leading-relaxed">
-                    <Markdown>{message.content}</Markdown>
-                  </div>
-                  <div className="flex flex-row gap-2">
-                    {/* Removed experimental_attachments as it's not supported */}
+                <div className={`flex w-full ${message.role === "assistant" ? "justify-start" : "justify-end"}`}>
+                  <div
+                    className={`max-w-[85%] md:max-w-[75%] p-4 rounded-2xl shadow-sm ${message.role === "assistant"
+                      ? "bg-white dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-700/50 text-zinc-800 dark:text-zinc-200 rounded-tl-none"
+                      : "bg-indigo-600 text-white rounded-tr-none"
+                      }`}
+                  >
+                    <div className="text-[15px] leading-relaxed">
+                      <Markdown>{message.content}</Markdown>
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -398,24 +415,22 @@ export default function Home() {
             onChange={handleFileChange}
           />
 
-          <div className="flex items-center w-full md:max-w-[500px] max-w-[calc(100dvw-32px)] bg-zinc-100 dark:bg-zinc-700 rounded-full px-4 py-2">
+          <div className="flex items-center w-full md:max-w-[600px] max-w-[calc(100dvw-32px)] bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700/50 shadow-inner rounded-2xl px-4 py-3">
             {/* Upload Button */}
             <button
               type="button"
               onClick={handleUploadClick}
-              className="text-zinc-500 dark:text-zinc-300 hover:text-zinc-700 dark:hover:text-zinc-100 focus:outline-none mr-3"
+              className="text-zinc-400 dark:text-zinc-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors mr-3"
               aria-label="Upload Files"
             >
-              <span className="w-5 h-5">
-                <AttachmentIcon aria-hidden="true" />
-              </span>
+              <AttachmentIcon />
             </button>
 
             {/* Message Input */}
             <input
               ref={inputRef}
-              className="bg-transparent flex-grow outline-none text-zinc-800 dark:text-zinc-300 placeholder-zinc-400"
-              placeholder="Send a message..."
+              className="bg-transparent flex-grow outline-none text-zinc-800 dark:text-zinc-100 placeholder-zinc-500"
+              placeholder="How can I help with your legal matter?"
               value={input}
               onChange={handleInputChange}
               onPaste={handlePaste}

@@ -22,7 +22,7 @@ declare global {
 
 export default function Chat() {
   const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
-    api: `${process.env.NEXT_PUBLIC_APP_URL || ''}/api/chat`,
+    api: '/api/chat',
     onError: (error) => {
       console.error('Chat error:', error);
       toast.error('An error occurred. Please try again.');
@@ -38,7 +38,7 @@ export default function Chat() {
   const currentToolCall = useMemo(() => {
     const lastMessage = messages[messages.length - 1];
     if (!lastMessage) return undefined;
-    
+
     // Check for function calls in the message
     if (lastMessage.function_call) {
       const functionCall = lastMessage.function_call;
@@ -67,8 +67,8 @@ export default function Chat() {
   return (
     <div className="flex justify-center items-start sm:pt-16 min-h-screen w-full dark:bg-neutral-900 px-4 md:px-0 py-4">
       <div className="flex flex-col items-center w-full max-w-[500px]">
-      <ProjectOverview />
-      <motion.div
+        <ProjectOverview />
+        <motion.div
           animate={{
             minHeight: isExpanded ? 200 : 0,
             padding: isExpanded ? 12 : 0,

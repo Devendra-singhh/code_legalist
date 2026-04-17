@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 
-const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8000";
+const BACKEND_URL = process.env.BACKEND_URL || "http://127.0.0.1:3005";
 
 export async function GET() {
   try {
@@ -28,7 +28,7 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    
+
     if (!body.model || !["mistral", "gemini"].includes(body.model)) {
       return Response.json(
         { error: "Invalid model specified. Must be 'mistral' or 'gemini'" },

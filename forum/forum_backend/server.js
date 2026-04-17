@@ -13,6 +13,7 @@ const postsRouter = require("./routes/posts");
 const allowedOrigins = [
   'http://localhost:3000',  // Next.js dev server
   'http://localhost:5173',  // Vite dev server
+  'http://127.0.0.1:5173',  // Vite specific IP
   'https://code-legalist.vercel.app',  // Production Next.js
   'https://code-legalist-forum.vercel.app',  // Production Vite
   'https://sloq.me',
@@ -24,7 +25,7 @@ const corsOptions = {
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
-    
+
     if (allowedOrigins.indexOf(origin) === -1) {
       const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
       return callback(new Error(msg), false);
@@ -40,7 +41,7 @@ const corsOptions = {
 const app = express();
 // Middleware
 app.use(express.json());
-app.use(cors(corsOptions));
+app.use(cors()); // TEMPORARY: Allow all origins for debugging
 
 
 // Connect to MongoDB
@@ -51,8 +52,8 @@ app.use('/api/posts', postsRouter);
 
 
 app.get('/', (req, res) => {
-    res.send("API is running...");
-  });
+  res.send("API is running...");
+});
 
 
 
@@ -69,11 +70,11 @@ app.use((err, req, res, next) => {
     query: req.query,
     params: req.params
   });
-  
+
   res.status(err.status || 500).json({
     success: false,
-    error: process.env.NODE_ENV === 'production' 
-      ? 'Internal Server Error' 
+    error: process.env.NODE_ENV === 'production'
+      ? 'Internal Server Error'
       : err.message,
     stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
   });

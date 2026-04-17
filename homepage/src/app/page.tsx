@@ -73,7 +73,7 @@ export default function Home() {
   const handleQuerySubmit = () => {
     if (query.trim()) {
       const encodedQuery = encodeURIComponent(query.trim());
-      const chatbotUrl = `https://frontend-ausqls22f-rxhulshxrmxs-projects.vercel.app/?query=${encodedQuery}`;
+      const chatbotUrl = `http://localhost:3004/?query=${encodedQuery}`;
       console.log('Redirecting to:', chatbotUrl); // Debug log
       window.location.replace(chatbotUrl);
     }
@@ -108,20 +108,20 @@ export default function Home() {
               <span className="absolute -inset-1 bg-gradient-to-r from-white/10 to-white/5 blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
             </span>
           </h1>
-          
+
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-6">
             <Link
-              href="https://lawyer.sloq.me"
+              href="http://localhost:3000"
               className="hover:text-indigo-200 hover:border-b transition duration-300"
             >
-              Find a Lawyer
+              Lawyer Directory
             </Link>
           </div>
-          
+
           <div className="md:flex space-x-4 ml-6 items-center">
             {isLoggedIn && (
-              <a href="http://localhost:5173/create-post" target="_blank" rel="noopener noreferrer">
+              <a href="http://localhost:3002/create-post" target="_blank" rel="noopener noreferrer">
                 <button className="px-4 py-2 border border-white/20 text-white rounded-lg hover:bg-white/10 transition duration-300">
                   Create Post
                 </button>
@@ -138,10 +138,10 @@ export default function Home() {
           {menuOpen && (
             <div className="absolute top-full left-0 w-full shadow-md flex flex-col items-center space-y-4 py-4 md:hidden z-10 bg-indigo-600/95 backdrop-blur-sm">
               <Link
-                href="https://lawyer.sloq.me"
+                href="http://localhost:3000"
                 className="hover:text-indigo-200"
               >
-                Find a Lawyer
+                Lawyer Directory
               </Link>
               <Link
                 href="/login"
@@ -151,7 +151,7 @@ export default function Home() {
                 Login
               </Link>
               {isLoggedIn && (
-                <a href="http://localhost:5173/create-post" target="_blank" rel="noopener noreferrer">
+                <a href="http://localhost:3002/create-post" target="_blank" rel="noopener noreferrer">
                   <button className="px-4 py-2 border border-white/20 text-white rounded-lg hover:bg-white/10 transition duration-300">
                     Create Post
                   </button>
@@ -160,7 +160,7 @@ export default function Home() {
             </div>
           )}
         </div>
-        
+
         {/* Content */}
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="text-center">
@@ -174,24 +174,24 @@ export default function Home() {
               <span className="block text-indigo-200 mt-2">Starts Here</span>
             </h1>
             <p className="text-xl md:text-2xl mb-12 text-indigo-100 max-w-3xl mx-auto leading-relaxed">
-              Connect with expert lawyers, get instant legal advice, and join our community forum
+              Consult our Legal AI, browse the professional directory, or join our community forum
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-6">
               <Link
-                href="https://chat.sloq.me"
+                href="http://localhost:3004"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group relative px-8 py-4 bg-white text-indigo-600 rounded-2xl hover:bg-indigo-50
                   transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl
                   font-semibold text-lg overflow-visible"
               >
-                <span className="relative z-10">Ask Legal AI</span>
+                <span className="relative z-10">AI Legal Consultant</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-indigo-100 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
                 {/* Message bubble tail */}
                 <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-6 h-6 bg-white rotate-45 group-hover:bg-indigo-50 transition-colors duration-300"></div>
               </Link>
               <Link
-                href="https://forum.sloq.me"
+                href="http://localhost:3002"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group px-8 py-4 bg-indigo-900/40 hover:bg-indigo-900/60 text-white rounded-xl
@@ -230,20 +230,18 @@ export default function Home() {
               <div className="w-12 h-12 bg-indigo-900/50 rounded-lg flex items-center justify-center mb-4">
                 <FiSearch className="text-indigo-400" size={24} />
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-white">Find the Right Lawyer</h3>
+              <h3 className="text-xl font-semibold mb-2 text-white">Lawyer Directory</h3>
               <p className="text-gray-300">
-                Connect with experienced lawyers who specialize in your specific
-                legal needs
+                Browse a comprehensive directory of verified legal professionals specialized for your needs.
               </p>
             </div>
             <div className="bg-gray-950 border border-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow backdrop-blur-sm">
               <div className="w-12 h-12 bg-indigo-900/50 rounded-lg flex items-center justify-center mb-4">
                 <FiMessageSquare className="text-indigo-400" size={24} />
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-white">Instant Legal Advice</h3>
+              <h3 className="text-xl font-semibold mb-2 text-white">AI Legal Consultant</h3>
               <p className="text-gray-300">
-                Get quick answers to your legal questions through our AI-powered
-                chatbot
+                Get deep, conversational legal advice and case research powered by Llama-3 AI.
               </p>
             </div>
             <div className="bg-gray-950 border border-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow backdrop-blur-sm">
@@ -271,7 +269,7 @@ export default function Home() {
 
         {/* Decorative bottom gradient */}
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/50 to-transparent"></div>
-        
+
         {/* Decorative circles */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute bottom-0 left-1/4 w-64 h-64 bg-indigo-500 rounded-full mix-blend-overlay filter blur-3xl transform translate-y-1/2"></div>
@@ -284,11 +282,11 @@ export default function Home() {
             Discover answers, connect with legal experts, and get guidance for any legal challenge. Fast, easy, and personalized. Your journey to clarity starts here.
           </p>
           <Link
-            href="https://lawyer.sloq.me"
+            href="http://localhost:3000"
             className="px-8 py-3 bg-white text-indigo-600 rounded-lg hover:bg-indigo-50
               transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-md"
           >
-            Find a Lawyer
+            Browse Directory
           </Link>
         </div>
       </section>

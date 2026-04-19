@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.39.2",
     "@supabase/supabase-js": "^2.49.7",
     "@types/jsonwebtoken": "^9.0.9",
     "jsonwebtoken": "^9.0.2",

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { ArrowLeft, ArrowRight, Facebook, Twitter, Instagram, Menu, X } from "lucide-react";
+import { SignInButton, UserButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import Link from "next/link";
 import { FiSearch, FiMessageSquare, FiUsers } from "react-icons/fi";
 import ContentCards from './components/ContentCards';
@@ -25,8 +26,6 @@ interface TrendingNewsItem {
 export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [username, setUsername] = useState("");
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -73,9 +72,9 @@ export default function Home() {
   const handleQuerySubmit = () => {
     if (query.trim()) {
       const encodedQuery = encodeURIComponent(query.trim());
-      const chatbotUrl = `http://localhost:3004/?query=${encodedQuery}`;
+      const chatbotUrl = `/chat/?query=${encodedQuery}`;
       console.log('Redirecting to:', chatbotUrl); // Debug log
-      window.location.replace(chatbotUrl);
+      window.location.assign(chatbotUrl);
     }
   };
 
@@ -112,7 +111,7 @@ export default function Home() {
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-6">
             <Link
-              href="http://localhost:3000"
+              href="/lawyers"
               className="hover:text-indigo-200 hover:border-b transition duration-300"
             >
               Lawyer Directory
@@ -120,13 +119,21 @@ export default function Home() {
           </div>
 
           <div className="md:flex space-x-4 ml-6 items-center">
-            {isLoggedIn && (
-              <a href="http://localhost:3002/create-post" target="_blank" rel="noopener noreferrer">
+            <SignedOut>
+              <SignInButton mode="modal">
+                <button className="px-4 py-2 bg-white/20 text-white rounded-lg hover:bg-white/30 transition duration-300">
+                  Login
+                </button>
+              </SignInButton>
+            </SignedOut>
+            <SignedIn>
+              <a href="/forum/create-post" target="_blank" rel="noopener noreferrer">
                 <button className="px-4 py-2 border border-white/20 text-white rounded-lg hover:bg-white/10 transition duration-300">
                   Create Post
                 </button>
               </a>
-            )}
+              <UserButton afterSignOutUrl="/" />
+            </SignedIn>
           </div>
 
           {/* Hamburger Menu Icon */}
@@ -138,25 +145,28 @@ export default function Home() {
           {menuOpen && (
             <div className="absolute top-full left-0 w-full shadow-md flex flex-col items-center space-y-4 py-4 md:hidden z-10 bg-indigo-600/95 backdrop-blur-sm">
               <Link
-                href="http://localhost:3000"
+                href="/lawyers"
                 className="hover:text-indigo-200"
               >
                 Lawyer Directory
               </Link>
-              <Link
-                href="/login"
-                className="px-4 py-2 bg-white/20 text-white rounded-lg hover:bg-white/30
-                  transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-md"
-              >
-                Login
-              </Link>
-              {isLoggedIn && (
-                <a href="http://localhost:3002/create-post" target="_blank" rel="noopener noreferrer">
-                  <button className="px-4 py-2 border border-white/20 text-white rounded-lg hover:bg-white/10 transition duration-300">
+              <SignedOut>
+                <SignInButton mode="modal">
+                  <button className="w-full text-center px-4 py-2 bg-white/20 text-white rounded-lg hover:bg-white/30 transition-all duration-300">
+                    Login
+                  </button>
+                </SignInButton>
+              </SignedOut>
+              <SignedIn>
+                <a href="/forum/create-post" target="_blank" rel="noopener noreferrer" className="w-full">
+                  <button className="w-full px-4 py-2 border border-white/20 text-white rounded-lg hover:bg-white/10 transition duration-300">
                     Create Post
                   </button>
                 </a>
-              )}
+                <div className="flex justify-center pt-2">
+                  <UserButton afterSignOutUrl="/" />
+                </div>
+              </SignedIn>
             </div>
           )}
         </div>
@@ -178,7 +188,7 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-6">
               <Link
-                href="http://localhost:3004"
+                href="/chat"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group relative px-8 py-4 bg-white text-indigo-600 rounded-2xl hover:bg-indigo-50
@@ -191,7 +201,7 @@ export default function Home() {
                 <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-6 h-6 bg-white rotate-45 group-hover:bg-indigo-50 transition-colors duration-300"></div>
               </Link>
               <Link
-                href="http://localhost:3002"
+                href="/forum"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group px-8 py-4 bg-indigo-900/40 hover:bg-indigo-900/60 text-white rounded-xl
@@ -282,7 +292,7 @@ export default function Home() {
             Discover answers, connect with legal experts, and get guidance for any legal challenge. Fast, easy, and personalized. Your journey to clarity starts here.
           </p>
           <Link
-            href="http://localhost:3000"
+            href="/lawyers"
             className="px-8 py-3 bg-white text-indigo-600 rounded-lg hover:bg-indigo-50
               transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-md"
           >

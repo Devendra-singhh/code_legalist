@@ -1,85 +1,113 @@
 // app/api/chat/route.ts
 import { NextRequest } from "next/server";
-import { Message } from "ai";
 
-// Get the backend URL from environment variables or use localhost as fallback
-const BACKEND_URL = process.env.BACKEND_URL || 'http://127.0.0.1:3005';
+// Backend URL — must match the Python server port
+const BACKEND_URL = process.env.BACKEND_URL || 'http://127.0.0.1:8080';
+const BACKEND_TIMEOUT_MS = 15000; // 15 seconds
 
-export const runtime = 'edge';
-
-// Helper function to clean response text
 function formatResponse(text: string): string {
-  // Remove excessive whitespace while preserving paragraph breaks
-  return text
-    .replace(/\n{3,}/g, '\n\n')  // Replace 3+ consecutive newlines with just 2
-    .trim();  // Remove leading/trailing whitespace
+  return text.replace(/\n{3,}/g, '\n\n').trim();
 }
 
 export async function POST(req: NextRequest) {
+  const startTime = Date.now();
+
   try {
-    // Parse request body
     const body = await req.json();
 
-    if (!body.messages) {
+    if (!body.messages || !Array.isArray(body.messages) || body.messages.length === 0) {
+      console.error('[chat/route] No messages provided');
       return Response.json({ error: "No messages provided" }, { status: 400 });
     }
 
-    // Get the last user message and history
-    const messages = body.messages || [];
+    const messages = body.messages;
     const lastUserMessage = messages[messages.length - 1];
-    const query = lastUserMessage.content;
-    const history = messages.slice(0, -1).map((m: any) => ({
+    const query: string =
+      typeof lastUserMessage.content === 'string'
+        ? lastUserMessage.content
+        : (lastUserMessage.content?.[0]?.text ?? '');
+
+    const history = messages.slice(0, -1).map((m: { role: string; content: unknown }) => ({
       role: m.role,
-      content: m.content
+      content: typeof m.content === 'string' ? m.content : String(m.content),
     }));
 
-    const backendResponse = await fetch(`${BACKEND_URL}/chat`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query, history }),
-    });
+    console.log(`[chat/route] Query: "${query.slice(0, 80)}..." | History: ${history.length} msgs`);
 
-    // Get the raw backend data
+    // Timeout-aware fetch
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), BACKEND_TIMEOUT_MS);
+
+    let backendResponse: Response;
+    try {
+      backendResponse = await fetch(`${BACKEND_URL}/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query, history }),
+        signal: controller.signal,
+      });
+    } finally {
+      clearTimeout(timeoutId);
+    }
+
     if (!backendResponse.ok) {
-      throw new Error(`Backend responded with status: ${backendResponse.status}`);
+      const errText = await backendResponse.text().catch(() => '');
+      console.error(`[chat/route] Backend error ${backendResponse.status}: ${errText}`);
+      throw new Error(`Backend responded with status ${backendResponse.status}`);
     }
+
     const backendData = await backendResponse.json();
+    const elapsed = Date.now() - startTime;
+    console.log(`[chat/route] Backend responded in ${elapsed}ms`);
 
-    // Format response for display
-    let responseText = "";
-
-    if (backendData.response) {
-      const lawyerResponse = backendData.response.lawyer_response;
-      const entities = backendData.response.extracted_legal_entities || [];
-
-      if (lawyerResponse) {
-        responseText = formatResponse(lawyerResponse);
-      } else {
-        responseText = `### 🔍 Analysis of "${query}"\n\nNo specific legal advice was generated for this query. However, I found some relevant information from the legal database:\n\n*   **Extracted Entities**: ${entities.length > 0 ? entities.join(', ') : "None identified"}\n*   **Database Search**: Completed successfully.\n\nPlease try rephrasing your question with more specific legal details.`;
-      }
+    let responseText = '';
+    if (backendData?.response?.lawyer_response) {
+      responseText = formatResponse(backendData.response.lawyer_response);
+    } else if (backendData?.response) {
+      const entities: string[] = backendData.response.extracted_legal_entities ?? [];
+      responseText = [
+        '### 🔍 Analysis',
+        '',
+        'I processed your query but could not generate a detailed response. Please try rephrasing.',
+        entities.length > 0 ? `\n**Identified Entities:** ${entities.join(', ')}` : '',
+      ].join('\n').trim();
     } else {
-      responseText = "I'm sorry, I encountered an issue processing your request. Please try again or rephrase your question.";
+      responseText = "I'm sorry, I encountered an issue processing your request. Please try again.";
     }
 
-    // Return plain text for the frontend useChat hook (v2 compatible)
     return new Response(responseText, {
-      headers: { 'Content-Type': 'text/plain' }
+      status: 200,
+      headers: { 'Content-Type': 'text/plain; charset=utf-8' },
     });
 
-  } catch (error) {
-    console.error("Error:", error);
-    return new Response("Error processing request", { status: 500 });
+  } catch (error: unknown) {
+    const elapsed = Date.now() - startTime;
+    const isTimeout = error instanceof Error && error.name === 'AbortError';
+
+    if (isTimeout) {
+      console.error(`[chat/route] Timed out after ${elapsed}ms`);
+    } else {
+      console.error(`[chat/route] Error after ${elapsed}ms:`, error);
+    }
+
+    const fallbackMessage = isTimeout
+      ? '### ⏱️ Request Timed Out\n\nThe Legal AI engine is taking longer than expected. Please try again.\n\n**Tips:**\n*   Try a shorter, more specific question.\n*   Check that the backend server is running.'
+      : '### 🛡️ AI Engine Temporarily Unavailable\n\nThe Legal AI engine is currently unavailable.\n\n**What you can do:**\n*   Visit the [Lawyer Finder](/lawyers) to connect with verified professionals.\n*   Browse the [Legal Forum](/forum) for community insights.\n*   Try again in a few minutes.';
+
+    return new Response(fallbackMessage, {
+      status: 200,
+      headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+    });
   }
 }
 
-// Add OPTIONS handler for CORS
 export async function OPTIONS() {
   return new Response(null, {
     status: 204,
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization'
-    }
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    },
   });
 }

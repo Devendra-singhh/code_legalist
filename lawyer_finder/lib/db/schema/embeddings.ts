@@ -14,14 +14,8 @@ export const embeddings = pgTable(
     ),
     content: text("content").notNull(),
     type: varchar("type", { length: 50 }).notNull().default("lawyer"),
-    embedding: vector("embedding", { dimensions: 768 }).notNull(),
-  },
-  (table) => ({
-    embeddingIndex: index("embeddingIndex").using(
-      "hnsw",
-      table.embedding.op("vector_cosine_ops"),
-    ),
-  }),
+    embedding: vector("embedding", { dimensions: 3072 }).notNull(),
+  }
 );
 
 export const lawyerContacts = pgTable("lawyer_contacts", {

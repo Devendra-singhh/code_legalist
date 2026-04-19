@@ -26,7 +26,8 @@ const corsOptions = {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
 
-    if (allowedOrigins.indexOf(origin) === -1) {
+    // Dynamically accept Vercel branch preview URLs and pre-defined allowed origins
+    if (allowedOrigins.indexOf(origin) === -1 && !origin.endsWith('.vercel.app')) {
       const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
       return callback(new Error(msg), false);
     }
@@ -41,7 +42,7 @@ const corsOptions = {
 const app = express();
 // Middleware
 app.use(express.json());
-app.use(cors()); // TEMPORARY: Allow all origins for debugging
+app.use(cors(corsOptions));
 
 
 // Connect to MongoDB

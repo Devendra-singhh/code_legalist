@@ -1,13 +1,21 @@
 import "./globals.css";
-import { Inter } from 'next/font/google';
 import { Metadata } from "next";
-import { Toaster } from "sonner";
-
-const inter = Inter({ subsets: ['latin'] });
+import { Viewport } from "next";
 
 export const metadata: Metadata = {
-  title: "Legal Chat Assistant",
-  description: "AI-powered legal assistant",
+  title: "Code Legalist | AI Legal Consultant for India",
+  description:
+    "AI-powered legal assistant specialising in Indian law. Get instant answers on your rights, statutes, procedures, and more.",
+  keywords: ["Indian law", "legal assistant", "AI lawyer", "legal advice India", "IPC", "CrPC"],
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f9fafb" },
+    { media: "(prefers-color-scheme: dark)", color: "#09090b" },
+  ],
 };
 
 export default function RootLayout({
@@ -16,11 +24,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning={true}>
-      <body className={inter.className} suppressHydrationWarning={true}>
-        <Toaster position="top-center" richColors />
-        {children}
-      </body>
+    <html lang="en" suppressHydrationWarning>
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }

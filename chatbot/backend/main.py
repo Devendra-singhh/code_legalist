@@ -223,15 +223,31 @@ BNS (BHARATIYA NYAYA SANHITA) CONTEXT:
 """
         groq_messages.append({"role": "user", "content": prompt})
 
-        chat_completion = groq_client.chat.completions.create(
-            messages=groq_messages,
-            model="llama-3.3-70b-versatile",
-            timeout=30,
-        )
-        return {"response": chat_completion.choices[0].message.content}
+        groq_model = os.environ.get("GROQ_MODEL", "qwen/qwen3.8-27b")
+        chat_completion = None
+        models_to_try = [groq_model, "qwen/qwen3.8-27b", "llama-3.3-70b-versatile", "llama-3.1-70b-versatile"]
+        seen_models = set()
+        for model_to_attempt in models_to_try:
+            if model_to_attempt in seen_models:
+                continue
+            seen_models.add(model_to_attempt)
+            try:
+                chat_completion = groq_client.chat.completions.create(
+                    messages=groq_messages,
+                    model=model_to_attempt,
+                    timeout=30,
+                )
+                if chat_completion and chat_completion.choices:
+                    return {"response": chat_completion.choices[0].message.content}
+            except Exception as model_err:
+                logger.warning(f"Groq model '{model_to_attempt}' error: {model_err}")
+                continue
+
+        return {"response": "Unable to generate legal AI response from available models."}
     except Exception as e:
         logger.error(f"Groq API error: {e}")
         return {"response": f"Error generating Groq response: {e}"}
+
 
 
 @app.post("/chat")

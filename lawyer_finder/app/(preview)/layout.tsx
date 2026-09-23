@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
-  title: "Find a Lawyer - Legal Assistance",
-  description: "Find the right lawyer for your legal needs with AI-powered search and recommendations",
+  title: "Lawyer Directory | Code Legalist",
+  description: "Find the right legal representation with AI-powered search across India's top advocates",
 };
 
 export default function RootLayout({
@@ -14,10 +13,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en" suppressHydrationWarning={true}>
-        <body suppressHydrationWarning={true}>{children}</body>
-      </html>
-    </ClerkProvider>
+    <html lang="en" suppressHydrationWarning className="dark selection:bg-indigo-500/30">
+      <body suppressHydrationWarning className="antialiased bg-zinc-950 text-zinc-100">
+        {children}
+      </body>
+    </html>
   );
 }

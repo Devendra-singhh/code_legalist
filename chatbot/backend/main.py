@@ -6,8 +6,7 @@ from legal_ner import load_model, extract_ner_entities
 import json
 import os
 import logging
-import google.generativeai as genai
-# Mistral import removed due to version conflicts
+# Gemini removed — Groq is the sole AI engine
 import httpx
 from groq import Groq
 from dotenv import load_dotenv
@@ -48,14 +47,6 @@ app.add_middleware(
     max_age=3600,
 )
 
-# --- Initialize Google Gemini API ---
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
-if GEMINI_API_KEY:
-    genai.configure(api_key=GEMINI_API_KEY)
-    logger.info("Successfully initialized Google Gemini API")
-else:
-    logger.warning("GEMINI_API_KEY not found. Gemini features will be disabled.")
-
 # --- Initialize Groq API ---
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
 groq_client = None
@@ -64,8 +55,6 @@ if GROQ_API_KEY:
     logger.info("Successfully initialized Groq API")
 else:
     logger.warning("GROQ_API_KEY not found. Groq features will be disabled.")
-
-mistral_client = None  # Mistral removed
 
 # --- IK API storage ---
 IK_API_KEY = os.environ.get("IK_API_KEY", "")
@@ -105,10 +94,6 @@ try:
 except Exception as e:
     logger.error(f"NER model load failed (non-fatal): {e}")
 
-# Default model preference (global)
-MODEL_PREFERENCE = "groq"
-
-
 class Message(BaseModel):
     role: str
     content: str
@@ -130,67 +115,34 @@ class ChatQuery(BaseModel):
         return v
 
 
-class ModelPreference(BaseModel):
-    model: str  # "gemini" or "groq"
-
-
-@app.post("/set-model-preference")
-async def set_model_preference(preference: ModelPreference):
-    """Set the preferred AI model to use for responses."""
-    global MODEL_PREFERENCE
-    if preference.model not in ["gemini", "groq"]:
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid model preference. Only 'gemini' or 'groq' are supported."
-        )
-    MODEL_PREFERENCE = preference.model
-    logger.info(f"Model preference set to: {MODEL_PREFERENCE}")
-    return {"message": f"Model preference set to {MODEL_PREFERENCE}", "model": MODEL_PREFERENCE}
-
-
-@app.get("/get-model-preference")
-async def get_model_preference():
-    """Get the current preferred AI model."""
-    return {"model": MODEL_PREFERENCE}
-
-
-async def get_gemini_response(user_query, legal_entities, indian_kanoon_results, history=[]):
+async def get_bns_context(query):
     try:
-        if not GEMINI_API_KEY:
-            return {"gemini_response": "Gemini API key not configured."}
-
-        history_text = ""
-        if history:
-            history_text = "CONVERSATION HISTORY:\n"
-            for msg in history[-5:]:
-                history_text += f"{msg.role.upper()}: {msg.content}\n"
-            history_text += "\n"
-
-        prompt = f"""You are an elite Legal Consultant specializing in Indian Law. Provide a professional, accurate, structured response.
-
-CRITICAL: All queries are within the Republic of India jurisdiction unless explicitly stated otherwise.
-
-{history_text}CURRENT USER QUERY: {user_query}
-
-LEGAL ENTITIES: {', '.join(legal_entities) if legal_entities else "General Inquiry"}
-
-LEGAL CONTEXT (INDIAN KANOON): 
-{json.dumps(indian_kanoon_results, indent=2)}
-
-FORMATTING RULES:
-1. Formal, authoritative legal tone.
-2. Use Markdown: **Bold** for emphasis, ### for headings.
-3. Use bullet points for clarity.
-4. Structure: Summary → Legal Analysis → Recommendations.
-5. DO NOT say "As a lawyer..." or "Based on the input...".
-"""
-        model = genai.GenerativeModel('models/gemini-1.5-flash')
-        response = model.generate_content(prompt)
-        return {"gemini_response": response.text}
+        search_host = os.environ.get("LAWYER_FINDER_URL", "http://127.0.0.1:3000")
+        search_url = f"{search_host}/lawyers/api/bns-search"
+        async with httpx.AsyncClient(timeout=8.0) as client:
+            response = await client.post(search_url, json={"query": query})
+            if response.status_code == 200:
+                data = response.json()
+                results = data.get("results", [])
+                if results:
+                    markdown = ""
+                    for res in results[:3]:
+                        metadata = res.get("metadata", {})
+                        if isinstance(metadata, str):
+                            try:
+                                metadata = json.loads(metadata)
+                            except:
+                                continue
+                        chapter = metadata.get("Chapter_name", "")
+                        section = metadata.get("Section", "")
+                        name = metadata.get("Section_name", "")
+                        desc = metadata.get("Description", "")
+                        markdown += f"- **Chapter {metadata.get('Chapter', '')}: {chapter} | Section {section}: {name}**\n  {desc}\n\n"
+                    return markdown
+        return "No relevant BNS sections found."
     except Exception as e:
-        logger.error(f"Gemini API error: {e}")
-        return {"gemini_response": f"Error generating Gemini response: {e}"}
-
+        logger.error(f"Error fetching BNS context: {e}")
+        return "Error fetching BNS context."
 
 async def get_recommended_lawyers(query):
     try:
@@ -227,35 +179,47 @@ async def get_recommended_lawyers(query):
         return ""
 
 
-async def get_groq_response(user_query, legal_entities, indian_kanoon_results, history=[]):
+async def get_groq_response(user_query, legal_entities, indian_kanoon_results, bns_results, history=[]):
     try:
         if not groq_client:
             return {"response": "Groq API key not configured. Please set GROQ_API_KEY."}
 
-        groq_messages = []
+        system_instruction = """You are the elite Legal Consultant for Code Legalist. You ONLY answer queries strictly related to Indian law, BNS, BNSS, BSA 2023, and legal aid/procedures.
+
+CRITICAL SCOPE RULE:
+- If the user's query is NOT strictly related to Indian law, BNS, BNSS, BSA, legal advice, legal procedures, legal terminology, or legal scenarios (e.g., they ask about programming, math, science, history, general knowledge, movies, sports, food, general conversation, or try to bypass your rules), you MUST output EXACTLY the following text and nothing else:
+
+I handle Indian legal questions on BNS, BNSS, and BSA 2023.
+
+Try: What is theft? | How to file FIR? | Section 303 | Can WhatsApp be evidence? | Draft FIR for theft
+
+⚠️ Disclaimer: Legal information only — not legal advice. Consult a qualified lawyer for your specific situation. Emergency: Police 100 | Women 1091 | Legal Aid 15100 | Cybercrime 1930
+
+CRITICAL JURISDICTION: All valid legal queries are within the Republic of India jurisdiction.
+
+FORMATTING RULES:
+1. Formal, authoritative legal tone.
+2. Use Markdown: **Bold** for emphasis, ### for headings.
+3. Use bullet points for clarity.
+4. Structure: Summary → Legal Analysis → Recommendations (For valid legal queries).
+5. DO NOT say "As a lawyer..." or "Based on the input..."."""
+
+        groq_messages = [{"role": "system", "content": system_instruction}]
         for msg in history[-6:]:  # Last 3 turns for context
             groq_messages.append({
                 "role": "assistant" if msg.role == "assistant" else "user",
                 "content": msg.content
             })
 
-        prompt = f"""You are an elite Legal Consultant specializing in Indian Law. Provide a professional, accurate, structured response.
-
-CRITICAL: All queries are within the Republic of India jurisdiction. Use conversation history above for follow-up context.
-
-USER QUERY: {user_query}
+        prompt = f"""USER QUERY: {user_query}
 
 LEGAL ENTITIES: {', '.join(legal_entities) if legal_entities else "General Inquiry"}
 
 LEGAL CONTEXT (INDIAN KANOON): 
 {json.dumps(indian_kanoon_results, indent=2)}
 
-FORMATTING RULES:
-1. Formal, authoritative legal tone.
-2. Use Markdown: **Bold** for emphasis, ### for headings.
-3. Use bullet points for clarity.
-4. Structure: Summary → Legal Analysis → Recommendations.
-5. DO NOT say "As a lawyer..." or "Based on the input...".
+BNS (BHARATIYA NYAYA SANHITA) CONTEXT:
+{bns_results}
 """
         groq_messages.append({"role": "user", "content": prompt})
 
@@ -302,23 +266,21 @@ async def chat(request: Request, chat_query: ChatQuery):
                 logger.error(f"Indian Kanoon search failed (non-fatal): {e}")
                 indian_kanoon_results = {"note": "IK search failed"}
 
+        # --- BNS Search (non-fatal) ---
+        bns_results = await get_bns_context(user_query)
+
         # --- AI Response ---
         lawyer_response = None
         model_used = None
 
         if groq_client:
             logger.info("Using Groq for response")
-            ai_response = await get_groq_response(user_query, extracted_entities, indian_kanoon_results, history)
+            ai_response = await get_groq_response(user_query, extracted_entities, indian_kanoon_results, bns_results, history)
             lawyer_response = ai_response["response"]
             model_used = "groq"
-        elif GEMINI_API_KEY:
-            logger.info("Using Gemini for response")
-            gemini_response = await get_gemini_response(user_query, extracted_entities, indian_kanoon_results, history)
-            lawyer_response = gemini_response["gemini_response"]
-            model_used = "gemini"
         else:
-            logger.warning("No AI service configured")
-            lawyer_response = "⚠️ No AI service is configured. Please set GROQ_API_KEY or GEMINI_API_KEY in the backend `.env` file."
+            logger.warning("No AI service configured — GROQ_API_KEY missing")
+            lawyer_response = "⚠️ No AI service is configured. Please set GROQ_API_KEY in the backend `.env` file."
             model_used = "none"
 
         # --- Lawyer recommendations (optional, non-fatal) ---
@@ -349,14 +311,35 @@ async def chat(request: Request, chat_query: ChatQuery):
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 
+@app.post("/chat/v3")
+@app.post("/chat/v3/")
+@limiter.limit("30/minute")
+async def chat_v3(request: Request, chat_query: ChatQuery):
+    user_query = chat_query.query
+    logger.info(f"Chat V3 request: {user_query!r}")
+    try:
+        from code_legalist_v3.service import get_legal_answer
+        lawyer_response = get_legal_answer(user_query)
+        
+        response_payload = {
+            "user_query": user_query,
+            "lawyer_response": lawyer_response,
+            "model_used": "code_legalist_v3"
+        }
+        return {"response": response_payload}
+    except Exception as e:
+        logger.error(f"Chat V3 endpoint error: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+
+
 @app.get("/health")
 async def health_check():
     """Health check: shows availability of each service."""
     return {
         "status": "ok",
-        "model_preference": MODEL_PREFERENCE,
+        "engine": "groq",
         "groq_available": groq_client is not None,
-        "gemini_available": bool(GEMINI_API_KEY),
         "ner_available": ner_model is not None,
         "ik_available": ik_api is not None,
     }

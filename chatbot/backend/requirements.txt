@@ -9,3 +9,12 @@ slowapi
 python-jose[cryptography]
 bcrypt
 cryptography
+datasets
+faiss-cpu
+sentence-transformers
+langchain
+langchain-community
+langchain-huggingface
+huggingface_hub
+pandas
+numpy

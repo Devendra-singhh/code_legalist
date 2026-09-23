@@ -1,0 +1,188 @@
+SAMPLE NATURAL LANGUAGE FAILURES:
+
+[BNS] Sec 3 - General explanations
+  Query: "Can you explain the offence of general explanations in BNS 2023?"
+  Response Snippet: "📋 **Act likely to cause harm, but done without criminal intent, and to prevent other harm.** (BNS Section 19)
+
+**Descrip..."
+
+[BNS] Sec 5 - Commutation of sentence
+  Query: "What is the punishment for commutation of sentence under the new BNS?"
+  Response Snippet: "📋 **Punishment for repeat offenders.** (BNS Section 71)
+
+**Description:**
+Whoever has been previously convicted of an of..."
+
+[BNS] Sec 19 - Act likely to cause harm, but done without criminal intent, and to prevent other harm.
+  Query: "What is the punishment for act likely to cause harm, but done without criminal intent, and to prevent other harm under the new BNS?"
+  Response Snippet: "📋 **Punishment for murder.** (BNS Section 103)
+
+**Description:**
+(1) Whoever commits murder shall be punished with death..."
+
+[BNS] Sec 25 - Act not intended and not known to be likely to cause death or grievous hurt, done by consent.
+  Query: "I want to know the legal definition of act not intended and not known to be likely to cause death or grievous hurt, done by consent."
+  Response Snippet: "📋 **Grievous Hurt** (BNS Section 117)
+
+**Definition:**
+Causing serious bodily harm — loss of limb, sight, hearing, or pe..."
+
+[BNS] Sec 29 - Exclusion of acts which are offences independently of harm caused.
+  Query: "I want to know the legal definition of exclusion of acts which are offences independently of harm caused."
+  Response Snippet: "📋 **Limit of punishment of offence made up of several offences.** (BNS Section 9)
+
+**Description:**
+(1) Where anything w..."
+
+[BNS] Sec 32 - Act to which a person is compelled by threats.
+  Query: "What is the section under BNS for act to which a person is compelled by threats?"
+  Response Snippet: "📋 **Criminal Intimidation** (BNS Section 351)
+
+**Definition:**
+Threatening a person with injury to them, their reputatio..."
+
+[BNS] Sec 32 - Act to which a person is compelled by threats.
+  Query: "I want to know the legal definition of act to which a person is compelled by threats."
+  Response Snippet: "📋 **Criminal Intimidation** (BNS Section 351)
+
+**Definition:**
+Threatening a person with injury to them, their reputatio..."
+
+[BNS] Sec 39 - When such right extends to causing any harm other than death.
+  Query: "Someone did a when such right extends to causing any harm other than death. What law applies?"
+  Response Snippet: "**Legal Analysis:**
+
+⚖️ **Possible Applicable Offences (BNS 2023):**
+
+📋 **Section 42 — When such right extends to causin..."
+
+[BNS] Sec 42 - When such right extends to causing any harm other than death.
+  Query: "What is the punishment for when such right extends to causing any harm other than death under the new BNS?"
+  Response Snippet: "📋 **When such right extends to causing any harm other than death.** (BNS Section 39)
+
+**Description:**
+If the offence be..."
+
+[BNS] Sec 58 - Concealing design to commit offence punishable with death or imprisonment for life.
+  Query: "My friend was accused of concealing design to commit offence punishable with death or imprisonment for life. What are the consequences?"
+  Response Snippet: "📋 **Concealing design to commit offence punishable with imprisonment.** (BNS Section 60)
+
+**Description:**
+Whoever, inte..."
+
+[BNS] Sec 58 - Concealing design to commit offence punishable with death or imprisonment for life.
+  Query: "Someone did a concealing design to commit offence punishable with death or imprisonment for life. What law applies?"
+  Response Snippet: "📋 **Concealing design to commit offence punishable with imprisonment.** (BNS Section 60)
+
+**Description:**
+Whoever, inte..."
+
+[BNS] Sec 63 - Rape.
+  Query: "What does BNS say about punishment for rape?"
+  Response Snippet: "📋 **Punishment for Rape** (BNS Section 64)
+
+**Definition:**
+Prescribes punishments for rape under BNS 2023.
+
+**Punishmen..."
+
+[BNS] Sec 64 - Punishment for rape.
+  Query: "Definition of sexual assault and rape under the new laws."
+  Response Snippet: "📋 **Rape — Definition** (BNS Section 63)
+
+**Definition:**
+Sexual intercourse without consent, or under fear/fraud/intoxi..."
+
+[BNS] Sec 64 - Punishment for rape.
+  Query: "Definition of sexual assault and rape under the new laws."
+  Response Snippet: "📋 **Rape — Definition** (BNS Section 63)
+
+**Definition:**
+Sexual intercourse without consent, or under fear/fraud/intoxi..."
+
+[BNS] Sec 65 - Punishment for rape in certain cases
+  Query: "Definition of sexual assault and rape under the new laws."
+  Response Snippet: "📋 **Rape — Definition** (BNS Section 63)
+
+**Definition:**
+Sexual intercourse without consent, or under fear/fraud/intoxi..."
+
+[BNS] Sec 65 - Punishment for rape in certain cases
+  Query: "What does BNS say about punishment for rape?"
+  Response Snippet: "📋 **Punishment for Rape** (BNS Section 64)
+
+**Definition:**
+Prescribes punishments for rape under BNS 2023.
+
+**Punishmen..."
+
+[BNS] Sec 70 - Gang rape.
+  Query: "Section 63 and 64 of Bharatiya Nyaya Sanhita."
+  Response Snippet: "📌 **Section 63 exists in 3 laws:**
+
+**BNS Section 63 — Rape.**
+*Punishment:*
+• (iii) with her consent, when her consent ..."
+
+[BNS] Sec 70 - Gang rape.
+  Query: "What does BNS say about punishment for rape?"
+  Response Snippet: "📋 **Punishment for Rape** (BNS Section 64)
+
+**Definition:**
+Prescribes punishments for rape under BNS 2023.
+
+**Punishmen..."
+
+[BNS] Sec 83 - Marriage ceremony fraudulently gone through without lawful marriage.
+  Query: "Someone did a marriage ceremony fraudulently gone through without lawful marriage. What law applies?"
+  Response Snippet: "📋 **Cheating** (BNS Section 318)
+
+**Definition:**
+Fraudulently deceiving a person to deliver property or cause damage.
+
+..."
+
+[BNS] Sec 83 - Marriage ceremony fraudulently gone through without lawful marriage.
+  Query: "What is the punishment for marriage ceremony fraudulently gone through without lawful marriage under the new BNS?"
+  Response Snippet: "📋 **Cheating** (BNS Section 318)
+
+**Definition:**
+Fraudulently deceiving a person to deliver property or cause damage.
+
+..."
+
+[BNS] Sec 97 - Kidnapping or abducting child under ten years of age with intent to steal from its person
+  Query: "I want to know the legal definition of kidnapping or abducting child under ten years of age with intent to steal from its person."
+  Response Snippet: "📋 **Theft** (BNS Section 303)
+
+**Definition:**
+Dishonestly taking movable property out of another person's possession wi..."
+
+[BNS] Sec 97 - Kidnapping or abducting child under ten years of age with intent to steal from its person
+  Query: "What is the section under BNS for kidnapping or abducting child under ten years of age with intent to steal from its person?"
+  Response Snippet: "📋 **Theft** (BNS Section 303)
+
+**Definition:**
+Dishonestly taking movable property out of another person's possession wi..."
+
+[BNS] Sec 101 - Murder.
+  Query: "What is the penalty for committing murder under BNS?"
+  Response Snippet: "📋 **Punishment for murder.** (BNS Section 103)
+
+**Description:**
+(1) Whoever commits murder shall be punished with death..."
+
+[BNS] Sec 101 - Murder.
+  Query: "BNS section for murder definition and punishment."
+  Response Snippet: "📋 **Punishment for murder.** (BNS Section 103)
+
+**Description:**
+(1) Whoever commits murder shall be punished with death..."
+
+[BNS] Sec 102 - Culpable homicide by causing death of person other than person whose death was intended.
+  Query: "What is the difference between murder and culpable homicide?"
+  Response Snippet: "📋 **Culpable Homicide** (BNS Section 92)
+
+**Definition:**
+Causing death with intention or causing injury likely to cause..."
+

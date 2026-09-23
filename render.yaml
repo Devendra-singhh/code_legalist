@@ -2,8 +2,8 @@ services:
   - type: web
     name: legal-assistant-backend
     runtime: python
+    rootDir: chatbot/backend
     plan: free
-    pythonVersion: 3.10.0
     buildCommand: pip install numpy==1.24.3 && pip install -r requirements.txt
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
     envVars:
@@ -16,8 +16,3 @@ services:
       - key: MISTRAL_API_KEY
         sync: false
     autoDeploy: true
-    scaling:
-      minInstances: 1
-      maxInstances: 1
-    resources:
-      memory: 1024Mi 

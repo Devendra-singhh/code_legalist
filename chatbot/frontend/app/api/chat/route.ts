@@ -14,6 +14,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
+    const chatbot = body.chatbot || "groq";
 
     if (!body.messages || !Array.isArray(body.messages) || body.messages.length === 0) {
       console.error('[chat/route] No messages provided');
@@ -32,7 +33,7 @@ export async function POST(req: NextRequest) {
       content: typeof m.content === 'string' ? m.content : String(m.content),
     }));
 
-    console.log(`[chat/route] Query: "${query.slice(0, 80)}..." | History: ${history.length} msgs`);
+    console.log(`[chat/route] Chatbot: ${chatbot} | Query: "${query.slice(0, 80)}..." | History: ${history.length} msgs`);
 
     // Timeout-aware fetch
     const controller = new AbortController();
@@ -40,7 +41,8 @@ export async function POST(req: NextRequest) {
 
     let backendResponse: Response;
     try {
-      backendResponse = await fetch(`${BACKEND_URL}/chat`, {
+      const endpoint = chatbot === "v3" ? "/chat/v3" : "/chat";
+      backendResponse = await fetch(`${BACKEND_URL}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query, history }),

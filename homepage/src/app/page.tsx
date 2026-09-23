@@ -187,7 +187,7 @@ export default function Home() {
               Consult our Legal AI, browse the professional directory, or join our community forum
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-6">
-              <Link
+              <a
                 href="/chat"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -199,8 +199,8 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-r from-indigo-100 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
                 {/* Message bubble tail */}
                 <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-6 h-6 bg-white rotate-45 group-hover:bg-indigo-50 transition-colors duration-300"></div>
-              </Link>
-              <Link
+              </a>
+              <a
                 href="/forum"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -209,8 +209,9 @@ export default function Home() {
                   font-semibold text-lg backdrop-blur-sm border border-indigo-700/20"
               >
                 Join Forum
-              </Link>
+              </a>
             </div>
+
           </div>
         </div>
 

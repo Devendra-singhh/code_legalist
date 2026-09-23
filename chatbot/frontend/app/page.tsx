@@ -15,8 +15,34 @@ interface ChatMessage {
   isError?: boolean;
 }
 
-const STORAGE_KEY = "code_legalist_history";
-const MAX_HISTORY = 50; // max messages kept in localStorage
+type ChatbotId = "groq" | "v3";
+
+const GROQ_STORAGE_KEY = "groq_chat_history";
+const V3_STORAGE_KEY = "v3_chat_history";
+const CHATBOT_PREF_KEY = "selected_chatbot";
+const MAX_HISTORY = 50;
+
+// ─── Chatbot definitions ──────────────────────────────────────────────────────
+const CHATBOTS = [
+  {
+    id: "groq" as ChatbotId,
+    label: "Groq Assistant",
+    shortLabel: "Groq",
+    description: "Powered by Llama-3.3 70B · Indian Legal Specialist",
+    gradient: "from-orange-500 to-amber-500",
+    glowColor: "shadow-orange-500/20",
+    badge: "⚡",
+  },
+  {
+    id: "v3" as ChatbotId,
+    label: "CodeLegalist V3",
+    shortLabel: "V3",
+    description: "Legal Assistant · Local Integration",
+    gradient: "from-violet-500 to-fuchsia-600",
+    glowColor: "shadow-violet-500/20",
+    badge: "🤖",
+  },
+];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -24,9 +50,9 @@ function generateId(): string {
   return Math.random().toString(36).slice(2, 9);
 }
 
-function loadHistory(): ChatMessage[] {
+function loadHistory(key: string): ChatMessage[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(key);
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     return parsed.map((m: Omit<ChatMessage, "timestamp"> & { timestamp: string }) => ({
@@ -38,10 +64,10 @@ function loadHistory(): ChatMessage[] {
   }
 }
 
-function saveHistory(messages: ChatMessage[]) {
+function saveHistory(key: string, messages: ChatMessage[]) {
   try {
     const toStore = messages.slice(-MAX_HISTORY);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(toStore));
+    localStorage.setItem(key, JSON.stringify(toStore));
   } catch {
     // quota exceeded — ignore
   }
@@ -51,34 +77,30 @@ function formatTime(date: Date): string {
   return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
 
-// ─── Model Badge ─────────────────────────────────────────────────────────────
+// ─── Chatbot Selector ─────────────────────────────────────────────────────────
 
-function ModelBadge({
-  model,
+function ChatbotSelector({
+  selected,
   onChange,
 }: {
-  model: string;
-  onChange: (m: string) => void;
+  selected: ChatbotId;
+  onChange: (id: ChatbotId) => void;
 }) {
-  const options = [
-    { id: "groq", label: "Groq", color: "from-orange-500 to-amber-500" },
-    { id: "gemini", label: "Gemini", color: "from-blue-500 to-indigo-500" },
-  ];
-
   return (
     <div className="flex items-center gap-1 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full p-0.5">
-      {options.map((opt) => (
+      {CHATBOTS.map((bot) => (
         <button
-          key={opt.id}
-          id={`model-toggle-${opt.id}`}
-          onClick={() => onChange(opt.id)}
+          key={bot.id}
+          id={`chatbot-select-${bot.id}`}
+          onClick={() => onChange(bot.id)}
+          title={bot.description}
           className={`px-3 py-1 rounded-full text-xs font-semibold transition-all duration-200 ${
-            model === opt.id
-              ? `bg-gradient-to-r ${opt.color} text-white shadow-sm`
+            selected === bot.id
+              ? `bg-gradient-to-r ${bot.gradient} text-white shadow-sm`
               : "text-zinc-400 hover:text-white"
           }`}
         >
-          {opt.label}
+          {bot.badge} {bot.shortLabel}
         </button>
       ))}
     </div>
@@ -87,7 +109,13 @@ function ModelBadge({
 
 // ─── Typing Indicator ─────────────────────────────────────────────────────────
 
-function TypingIndicator() {
+function TypingIndicator({ chatbot }: { chatbot: ChatbotId }) {
+  const isGroq = chatbot === "groq";
+  const bgGradient = isGroq 
+    ? "from-orange-500 to-amber-500" 
+    : "from-violet-500 to-fuchsia-600";
+  const dotColor = isGroq ? "bg-orange-400" : "bg-violet-400";
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
@@ -95,7 +123,7 @@ function TypingIndicator() {
       exit={{ opacity: 0, y: 8 }}
       className="flex items-end gap-3 px-4 py-2"
     >
-      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-md">
+      <div className={`flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br ${bgGradient} flex items-center justify-center shadow-md`}>
         <BotIcon className="text-white w-4 h-4" />
       </div>
       <div className="bg-white dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-700/50 rounded-2xl rounded-bl-none px-4 py-3 shadow-sm">
@@ -103,7 +131,7 @@ function TypingIndicator() {
           {[0, 1, 2].map((i) => (
             <motion.span
               key={i}
-              className="w-2 h-2 rounded-full bg-indigo-400 dark:bg-indigo-500 block"
+              className={`w-2 h-2 rounded-full ${dotColor} block`}
               animate={{ y: [0, -6, 0] }}
               transition={{
                 duration: 0.8,
@@ -121,8 +149,17 @@ function TypingIndicator() {
 
 // ─── Message Bubble ───────────────────────────────────────────────────────────
 
-function MessageBubble({ message }: { message: ChatMessage }) {
+function MessageBubble({ message, chatbot }: { message: ChatMessage; chatbot: ChatbotId }) {
   const isUser = message.role === "user";
+  const isGroq = chatbot === "groq";
+
+  const userGradient = isGroq
+    ? "from-orange-500 to-amber-500"
+    : "from-violet-500 to-fuchsia-600";
+  const userRingColor = isGroq ? "focus:ring-orange-500/40" : "focus:ring-violet-500/40";
+  const avatarGradient = isUser
+    ? userGradient
+    : "bg-gradient-to-br from-slate-600 to-slate-800 dark:from-slate-500 dark:to-slate-700";
 
   return (
     <motion.div
@@ -133,11 +170,7 @@ function MessageBubble({ message }: { message: ChatMessage }) {
     >
       {/* Avatar */}
       <div
-        className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center shadow-md ${
-          isUser
-            ? "bg-gradient-to-br from-indigo-500 to-violet-600"
-            : "bg-gradient-to-br from-slate-600 to-slate-800 dark:from-slate-500 dark:to-slate-700"
-        }`}
+        className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center shadow-md ${avatarGradient}`}
       >
         {isUser ? (
           <UserIcon className="text-white w-4 h-4" />
@@ -151,7 +184,7 @@ function MessageBubble({ message }: { message: ChatMessage }) {
         <div
           className={`px-4 py-3 rounded-2xl shadow-sm text-[14.5px] leading-relaxed ${
             isUser
-              ? "bg-gradient-to-br from-indigo-500 to-violet-600 text-white rounded-tr-none"
+              ? `bg-gradient-to-br ${userGradient} text-white rounded-tr-none`
               : message.isError
               ? "bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800/50 text-red-700 dark:text-red-300 rounded-bl-none"
               : "bg-white dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-700/50 text-zinc-800 dark:text-zinc-200 rounded-bl-none"
@@ -160,7 +193,9 @@ function MessageBubble({ message }: { message: ChatMessage }) {
           {isUser ? (
             <p className="whitespace-pre-wrap">{message.content}</p>
           ) : (
-            <div className="prose prose-sm dark:prose-invert max-w-none prose-headings:font-semibold prose-headings:text-zinc-800 dark:prose-headings:text-zinc-100 prose-a:text-indigo-600 dark:prose-a:text-indigo-400">
+            <div className={`prose prose-sm dark:prose-invert max-w-none prose-headings:font-semibold prose-headings:text-zinc-800 dark:prose-headings:text-zinc-100 ${
+              isGroq ? "prose-a:text-orange-600 dark:prose-a:text-orange-400" : "prose-a:text-violet-600 dark:prose-a:text-violet-400"
+            }`}>
               <Markdown>{message.content}</Markdown>
             </div>
           )}
@@ -173,16 +208,32 @@ function MessageBubble({ message }: { message: ChatMessage }) {
   );
 }
 
-// ─── Empty State ──────────────────────────────────────────────────────────────
+// ─── Empty States ───────────────────────────────────────────────────────────
 
-const SUGGESTED_QUERIES = [
+const GROQ_SUGGESTED_QUERIES = [
   "What are my rights if arrested in India?",
-  "Explain Section 302 of the IPC",
+  "Explain Section 103 of the BNS",
   "How to file an FIR online?",
   "What is anticipatory bail?",
 ];
 
-function EmptyState({ onQuery }: { onQuery: (q: string) => void }) {
+const V3_SUGGESTED_QUERIES = [
+  "What is theft under BNS?",
+  "How to file an FIR?",
+  "Draft FIR for theft of mobile",
+  "Can WhatsApp chats be used as evidence?",
+];
+
+function EmptyState({ chatbot, onQuery }: { chatbot: ChatbotId; onQuery: (q: string) => void }) {
+  const isGroq = chatbot === "groq";
+  const queries = isGroq ? GROQ_SUGGESTED_QUERIES : V3_SUGGESTED_QUERIES;
+  const gradient = isGroq ? "from-orange-500 via-amber-500 to-yellow-500" : "from-violet-500 to-fuchsia-600";
+  const shadow = isGroq ? "shadow-orange-500/25" : "shadow-violet-500/25";
+  const title = isGroq ? "⚡ Groq Assistant" : "🤖 CodeLegalist V3";
+  const desc = isGroq
+    ? "Your AI-powered Indian legal consultant. Powered by Llama-3.3 70B via Groq."
+    : "Local AI Legal Assistant powered by BNS, BNSS, and BSA 2023 datasets + FAISS.";
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -192,13 +243,13 @@ function EmptyState({ onQuery }: { onQuery: (q: string) => void }) {
     >
       {/* Logo */}
       <div className="flex flex-col items-center gap-4">
-        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 via-violet-500 to-purple-600 flex items-center justify-center shadow-xl shadow-indigo-500/25">
+        <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${gradient} flex items-center justify-center shadow-xl ${shadow}`}>
           <BotIcon className="text-white w-8 h-8" />
         </div>
         <div>
-          <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">Code Legalist AI</h2>
-          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400 max-w-xs mx-auto">
-            Your AI-powered Indian legal consultant. Ask about rights, statutes, procedures, or case law.
+          <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">{title}</h2>
+          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400 max-w-sm mx-auto">
+            {desc}
           </p>
         </div>
       </div>
@@ -209,14 +260,18 @@ function EmptyState({ onQuery }: { onQuery: (q: string) => void }) {
           Try asking
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {SUGGESTED_QUERIES.map((q) => (
+          {queries.map((q) => (
             <button
               key={q}
               id={`suggested-query-${q.slice(0, 20).replace(/\s+/g, '-').toLowerCase()}`}
               onClick={() => onQuery(q)}
-              className="text-left px-4 py-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800/50 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 hover:border-indigo-300 dark:hover:border-indigo-700 transition-all duration-200 text-sm text-zinc-700 dark:text-zinc-300 group"
+              className={`text-left px-4 py-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800/50 transition-all duration-200 text-sm text-zinc-700 dark:text-zinc-300 group ${
+                isGroq
+                  ? "hover:bg-orange-50 dark:hover:bg-orange-950/30 hover:border-orange-300 dark:hover:border-orange-700"
+                  : "hover:bg-violet-50 dark:hover:bg-violet-950/30 hover:border-violet-300 dark:hover:border-violet-700"
+              }`}
             >
-              <span className="group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+              <span className={`transition-colors ${isGroq ? "group-hover:text-orange-600 dark:group-hover:text-orange-400" : "group-hover:text-violet-600 dark:group-hover:text-violet-400"}`}>
                 {q}
               </span>
             </button>
@@ -225,7 +280,7 @@ function EmptyState({ onQuery }: { onQuery: (q: string) => void }) {
       </div>
 
       <p className="text-xs text-zinc-400 dark:text-zinc-600 max-w-sm">
-        ⚖️ For general information only. Always consult a qualified advocate for legal advice.
+        ⚖️ For educational and informational purposes only. Always consult a qualified advocate for legal advice.
       </p>
     </motion.div>
   );
@@ -234,41 +289,62 @@ function EmptyState({ onQuery }: { onQuery: (q: string) => void }) {
 // ─── Main Component ────────────────────────────────────────────────────────────
 
 export default function Home() {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [selectedChatbot, setSelectedChatbot] = useState<ChatbotId>("groq");
+
+  // Independent message histories
+  const [groqMessages, setGroqMessages] = useState<ChatMessage[]>([]);
+  const [v3Messages, setV3Messages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [modelPreference, setModelPreference] = useState("groq");
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // ── Load history from localStorage on mount ────────────────────────────────
+  // ── Load persisted chatbot preference ─────────────────────────────────────
   useEffect(() => {
-    const history = loadHistory();
-    if (history.length > 0) setMessages(history);
+    const saved = localStorage.getItem(CHATBOT_PREF_KEY) as ChatbotId | null;
+    if (saved && (saved === "groq" || saved === "v3")) {
+      setSelectedChatbot(saved);
+    }
+    // Load Groq history
+    const groqHist = loadHistory(GROQ_STORAGE_KEY);
+    if (groqHist.length > 0) setGroqMessages(groqHist);
+
+    // Load V3 history
+    const v3Hist = loadHistory(V3_STORAGE_KEY);
+    if (v3Hist.length > 0) setV3Messages(v3Hist);
   }, []);
 
-  // ── Persist history to localStorage whenever messages change ──────────────
+  // ── Persist histories ───────────────────────────────────────────────────
   useEffect(() => {
-    if (messages.length > 0) saveHistory(messages);
-  }, [messages]);
+    if (groqMessages.length > 0) {
+      saveHistory(GROQ_STORAGE_KEY, groqMessages);
+    } else {
+      localStorage.removeItem(GROQ_STORAGE_KEY);
+    }
+  }, [groqMessages]);
 
-  // ── Fetch current model preference ────────────────────────────────────────
   useEffect(() => {
-    fetch("/api/model-preference")
-      .then((r) => r.json())
-      .then((d) => {
-        if (d.model) setModelPreference(d.model);
-      })
-      .catch(console.error);
-  }, []);
+    if (v3Messages.length > 0) {
+      saveHistory(V3_STORAGE_KEY, v3Messages);
+    } else {
+      localStorage.removeItem(V3_STORAGE_KEY);
+    }
+  }, [v3Messages]);
+
+  // ── Persist chatbot preference ─────────────────────────────────────────────
+  const handleChatbotSwitch = (id: ChatbotId) => {
+    setSelectedChatbot(id);
+    localStorage.setItem(CHATBOT_PREF_KEY, id);
+    setError(null);
+  };
 
   // ── Scroll to bottom on new messages ──────────────────────────────────────
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isLoading]);
+  }, [groqMessages, v3Messages, isLoading]);
 
   // ── Auto-resize textarea ───────────────────────────────────────────────────
   useEffect(() => {
@@ -278,21 +354,7 @@ export default function Home() {
     }
   }, [input]);
 
-  // ── Model change ───────────────────────────────────────────────────────────
-  const handleModelChange = async (model: string) => {
-    try {
-      const res = await fetch("/api/model-preference", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ model }),
-      });
-      if (res.ok) setModelPreference(model);
-    } catch (e) {
-      console.error("Failed to change model:", e);
-    }
-  };
-
-  // ── Send a message ─────────────────────────────────────────────────────────
+  // ── Send a message to backend ──────────────────────────────────────────────
   const sendMessage = async (text: string) => {
     const trimmed = text.trim();
     if (!trimmed || isLoading) return;
@@ -307,18 +369,23 @@ export default function Home() {
       timestamp: new Date(),
     };
 
-    // Optimistic update
-    const updatedMessages = [...messages, userMsg];
-    setMessages(updatedMessages);
+    const currentMessages = selectedChatbot === "groq" ? groqMessages : v3Messages;
+    const updatedMessages = [...currentMessages, userMsg];
+
+    if (selectedChatbot === "groq") {
+      setGroqMessages(updatedMessages);
+    } else {
+      setV3Messages(updatedMessages);
+    }
     setIsLoading(true);
 
     try {
-      // Build payload — include full conversation history for context
       const payload = {
         messages: updatedMessages.map((m) => ({
           role: m.role,
           content: m.content,
         })),
+        chatbot: selectedChatbot
       };
 
       const res = await fetch("/api/chat", {
@@ -337,7 +404,11 @@ export default function Home() {
         isError: !responseText,
       };
 
-      setMessages((prev) => [...prev, botMsg]);
+      if (selectedChatbot === "groq") {
+        setGroqMessages((prev) => [...prev, botMsg]);
+      } else {
+        setV3Messages((prev) => [...prev, botMsg]);
+      }
     } catch (err) {
       console.error("Chat fetch error:", err);
       const errMsg: ChatMessage = {
@@ -348,11 +419,14 @@ export default function Home() {
         timestamp: new Date(),
         isError: true,
       };
-      setMessages((prev) => [...prev, errMsg]);
+      if (selectedChatbot === "groq") {
+        setGroqMessages((prev) => [...prev, errMsg]);
+      } else {
+        setV3Messages((prev) => [...prev, errMsg]);
+      }
       setError("Failed to connect to the AI backend.");
     } finally {
       setIsLoading(false);
-      // Re-focus input
       setTimeout(() => inputRef.current?.focus(), 100);
     }
   };
@@ -363,18 +437,28 @@ export default function Home() {
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    // Shift+Enter → newline, Enter alone → send
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       sendMessage(input);
     }
   };
 
-  const clearHistory = () => {
-    setMessages([]);
-    localStorage.removeItem(STORAGE_KEY);
+  const clearActiveHistory = () => {
+    if (selectedChatbot === "groq") {
+      setGroqMessages([]);
+    } else {
+      setV3Messages([]);
+    }
     inputRef.current?.focus();
   };
+
+  const activeChatbot = CHATBOTS.find((b) => b.id === selectedChatbot)!;
+  const activeMessages = selectedChatbot === "groq" ? groqMessages : v3Messages;
+  const inputRingColor = selectedChatbot === "groq" ? "focus:ring-orange-500/40" : "focus:ring-violet-500/40";
+  const inputBorderFocus = selectedChatbot === "groq" ? "focus:border-orange-400" : "focus:border-violet-400";
+  const sendButtonColor = selectedChatbot === "groq" 
+    ? "from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 shadow-orange-500/20" 
+    : "from-violet-500 to-fuchsia-600 hover:from-violet-600 hover:to-fuchsia-700 shadow-violet-500/20";
 
   return (
     <div className="flex flex-col h-dvh bg-zinc-50 dark:bg-zinc-950">
@@ -384,50 +468,50 @@ export default function Home() {
         <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
           {/* Brand */}
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 via-violet-500 to-purple-600 flex items-center justify-center shadow-md shadow-indigo-500/20">
+            <div className={`w-8 h-8 rounded-xl bg-gradient-to-br ${activeChatbot.gradient} flex items-center justify-center shadow-md ${activeChatbot.glowColor}`}>
               <BotIcon className="text-white w-4 h-4" />
             </div>
-            <div className="leading-tight">
+            <div className="leading-tight hidden sm:block">
               <p className="font-bold text-sm text-zinc-900 dark:text-zinc-50">Code Legalist</p>
               <p className="text-[10px] text-zinc-400 dark:text-zinc-500 font-medium uppercase tracking-wider">
-                AI Legal Consultant
+                {activeChatbot.description}
               </p>
             </div>
           </div>
 
           {/* Actions */}
           <div className="flex items-center gap-3">
-            {messages.length > 0 && (
+            {activeMessages.length > 0 && (
               <button
                 id="clear-history-btn"
-                onClick={clearHistory}
-                title="Clear conversation"
+                onClick={clearActiveHistory}
+                title={`Clear ${selectedChatbot === "groq" ? "Groq" : "V3"} conversation`}
                 className="text-xs text-zinc-400 hover:text-red-500 dark:hover:text-red-400 transition-colors px-2 py-1 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/30"
               >
                 Clear
               </button>
             )}
-            <ModelBadge model={modelPreference} onChange={handleModelChange} />
+            <ChatbotSelector selected={selectedChatbot} onChange={handleChatbotSwitch} />
           </div>
         </div>
       </header>
 
-      {/* ── Messages ── */}
+      {/* ── Body: Active Chat View ── */}
       <div
         ref={scrollContainerRef}
         className="flex-1 overflow-y-auto"
         style={{ scrollbarWidth: "thin", scrollbarColor: "#d1d5db transparent" }}
       >
         <div className="max-w-4xl mx-auto py-4">
-          {messages.length === 0 ? (
-            <EmptyState onQuery={(q) => { setInput(q); sendMessage(q); }} />
+          {activeMessages.length === 0 ? (
+            <EmptyState chatbot={selectedChatbot} onQuery={(q) => { setInput(q); sendMessage(q); }} />
           ) : (
             <div className="flex flex-col gap-1 pb-4">
-              {messages.map((msg) => (
-                <MessageBubble key={msg.id} message={msg} />
+              {activeMessages.map((msg) => (
+                <MessageBubble key={msg.id} message={msg} chatbot={selectedChatbot} />
               ))}
               <AnimatePresence>
-                {isLoading && <TypingIndicator key="typing" />}
+                {isLoading && <TypingIndicator key="typing" chatbot={selectedChatbot} />}
               </AnimatePresence>
               <div ref={messagesEndRef} />
             </div>
@@ -468,10 +552,10 @@ export default function Home() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Ask about your legal matter... (Enter to send, Shift+Enter for newline)"
+              placeholder="Ask about your legal matter… (Enter to send, Shift+Enter for newline)"
               rows={1}
               disabled={isLoading}
-              className="w-full resize-none rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-4 py-3 pr-16 text-sm text-zinc-800 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-400 disabled:opacity-60 transition-all duration-200 shadow-sm"
+              className={`w-full resize-none rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-4 py-3 pr-16 text-sm text-zinc-800 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 outline-none focus:ring-2 ${inputRingColor} ${inputBorderFocus} disabled:opacity-60 transition-all duration-200 shadow-sm`}
               style={{ minHeight: "48px", maxHeight: "160px" }}
             />
           </div>
@@ -480,7 +564,7 @@ export default function Home() {
             id="send-message-btn"
             type="submit"
             disabled={isLoading || !input.trim()}
-            className="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 hover:from-indigo-600 hover:to-violet-700 disabled:from-zinc-300 disabled:to-zinc-400 dark:disabled:from-zinc-700 dark:disabled:to-zinc-600 flex items-center justify-center shadow-md shadow-indigo-500/20 disabled:shadow-none transition-all duration-200 disabled:cursor-not-allowed"
+            className={`flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br ${sendButtonColor} disabled:from-zinc-300 disabled:to-zinc-400 dark:disabled:from-zinc-700 dark:disabled:to-zinc-600 flex items-center justify-center shadow-md disabled:shadow-none transition-all duration-200 disabled:cursor-not-allowed`}
             aria-label="Send message"
           >
             <svg viewBox="0 0 16 16" fill="none" className="w-4 h-4 text-white">
@@ -496,7 +580,7 @@ export default function Home() {
         </form>
 
         <p className="text-center text-[10px] text-zinc-400 dark:text-zinc-600 pb-2">
-          For informational purposes only · Not a substitute for legal counsel
+          {activeChatbot.label} · For informational purposes only · Not a substitute for legal counsel
         </p>
       </div>
     </div>

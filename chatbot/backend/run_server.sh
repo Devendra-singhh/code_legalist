@@ -8,5 +8,6 @@ if [ -f .env ]; then
     export $(cat .env | xargs)
 fi
 
-echo "Environment loaded. Starting FastAPI server..."
-uvicorn main:app --reload 
+PORT=${PORT:-8080}
+echo "Environment loaded. Starting FastAPI server on port $PORT..."
+./venv/bin/uvicorn main:app --reload --reload-exclude "*faiss_cache*" --reload-exclude "*datasets*" --port $PORT 

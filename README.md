@@ -32,13 +32,20 @@ Code Legalist is a comprehensive legal technology platform that makes legal assi
 - Smart search integration
 - Responsive design
 
-## Live URLs
+## Deployment & Live URLs
 
-- Main Platform: https://sloq.me
-- Legal Forum: https://forum.sloq.me
-- AI Chatbot: https://chat.sloq.me
-- Lawyer Finder: https://lawyer.sloq.me
-- Admin Panel: https://sloq.me/admin
+The platform components are deployed on **Vercel** (Next.js & Vite frontends) and **Render** (FastAPI AI Backend):
+
+| Component | Platform | Configuration / Default URL |
+| :--- | :--- | :--- |
+| **Main Portal / Homepage** | Vercel | [https://code-legalist.vercel.app](https://code-legalist.vercel.app) |
+| **AI Legal Chatbot** | Vercel + Render | Deployed via `chatbot/frontend` (Vercel) & `chatbot/backend` (Render) |
+| **Backend API (FastAPI)** | Render | Configured via [`render.yaml`](render.yaml) (`legal-assistant-backend`) |
+| **Lawyer Finder** | Vercel | Deployed via `lawyer_finder` |
+| **Legal Forum** | Vercel | Frontend: `forum/forum_frontend`, API: `forum/forum_backend` |
+
+> *Note: Legacy `*.sloq.me` custom domains were tied to a prior DNS registration that is no longer active.*
+
 
 ## Project Structure
 

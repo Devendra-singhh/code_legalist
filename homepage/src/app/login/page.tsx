@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
 import { FiSun, FiMoon } from "react-icons/fi";
 
-const API_BASE_URL = "https://code-legalist-backend.vercel.app";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://code-legalist-backend.vercel.app";
 
 interface FormData {
   username: string;
